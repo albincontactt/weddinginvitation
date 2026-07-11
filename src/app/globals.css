@@ -1,26 +1,61 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: var(--theme-background);
+  --color-primary: var(--theme-primary);
+  --color-accent: var(--theme-accent);
+  --color-darkText: var(--theme-darkText);
+  --color-lightText: var(--theme-lightText);
+  
+  --font-cormorant: var(--font-cormorant);
+  --font-cinzel: var(--font-cinzel);
+  --font-poppins: var(--font-poppins);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --theme-background: #FFF8F8;
+  --theme-primary: #DAB8B8;
+  --theme-accent: #C9A66B;
+  --theme-darkText: #3B3B3B;
+  --theme-lightText: #777777;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html.dark {
+  --theme-background: #0d0d0d;
+  --theme-primary: #8c6e6e;
+  --theme-accent: #e5b967;
+  --theme-darkText: #f2efe9;
+  --theme-lightText: #b3b0a8;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--theme-background);
+  color: var(--theme-darkText);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 166, 107, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  transition: background-color 0.5s ease, border-color 0.5s ease;
+}
+
+html.dark .glass-card {
+  background: rgba(10, 10, 10, 0.4);
+  border: 1px solid rgba(229, 185, 103, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(to right, var(--theme-accent), #E2C792, var(--theme-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
 }

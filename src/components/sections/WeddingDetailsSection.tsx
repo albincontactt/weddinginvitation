@@ -1,0 +1,60 @@
+import { FadeIn } from "../animations/FadeIn";
+import { GlassCard } from "../ui/GlassCard";
+import { Calendar, Clock, MapPin } from "lucide-react";
+
+export function WeddingDetailsSection() {
+  const details = [
+    {
+      title: "Wedding Date",
+      value: "August 17, 2026",
+      icon: <Calendar className="w-6 h-6 text-accent mb-4" />,
+      delay: 0.2
+    },
+    {
+      title: "Wedding Time",
+      value: "10:00 AM", // Placeholder since it wasn't provided
+      icon: <Clock className="w-6 h-6 text-accent mb-4" />,
+      delay: 0.4
+    },
+    {
+      title: "Church",
+      value: "St. Mary's Church", // Placeholder
+      icon: <MapPin className="w-6 h-6 text-accent mb-4" />,
+      delay: 0.6
+    },
+    {
+      title: "Reception",
+      value: "Grand Auditorium", // Placeholder
+      icon: <MapPin className="w-6 h-6 text-accent mb-4" />,
+      delay: 0.8
+    }
+  ];
+
+  return (
+    <section id="details" className="py-24 relative bg-background">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <FadeIn direction="up">
+          <h2 className="font-cormorant text-4xl md:text-5xl text-darkText font-bold text-center mb-16">
+            Wedding Details
+          </h2>
+        </FadeIn>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {details.map((detail, index) => (
+            <FadeIn key={index} direction="up" delay={detail.delay}>
+              <GlassCard className="flex flex-col items-center text-center h-full hover:border-accent transition-colors duration-300">
+                {detail.icon}
+                <h4 className="font-cinzel text-lg text-darkText font-bold mb-2">
+                  {detail.title}
+                </h4>
+                <p className="font-poppins text-lightText">
+                  {detail.value}
+                </p>
+              </GlassCard>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
