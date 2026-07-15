@@ -1,86 +1,136 @@
-@import "tailwindcss";
-
-@theme {
-  --color-background: var(--theme-background);
-  --color-primary: var(--theme-primary);
-  --color-accent: var(--theme-accent);
-  --color-darkText: var(--theme-darkText);
-  --color-lightText: var(--theme-lightText);
-  
-  --font-cormorant: var(--font-cormorant);
-  --font-cinzel: var(--font-cinzel);
-  --font-poppins: var(--font-poppins);
-}
-
 :root {
-  /* ── Deep Midnight Black + Gold luxury palette ── */
+  /* ── Luxury Midnight Black + Gold Wedding Palette ── */
   --theme-background: #080808;
-  --theme-primary:    #F8F4EC;
-  --theme-accent:     #D4AF37;
-  --theme-darkText:   #F5F0E4;
-  --theme-lightText:  #C9B99A;
+  --theme-primary: #F8F4EC;
+  --theme-accent: #D4AF37;
+  --theme-darkText: #F5F0E4;
+  --theme-lightText: #C9B99A;
+
+  /* Extra luxury shades */
+  --theme-glass: rgba(10, 10, 10, 0.70);
+  --theme-gold-border: rgba(212, 175, 55, 0.22);
 }
+
 
 html.dark {
-  --theme-background: #080808;
-  --theme-primary:    #F8F4EC;
-  --theme-accent:     #D4AF37;
-  --theme-darkText:   #F5F0E4;
-  --theme-lightText:  #C9B99A;
+  --theme-background: #050505;
+  --theme-primary: #F8F4EC;
+  --theme-accent: #D4AF37;
+  --theme-darkText: #FFF8E7;
+  --theme-lightText: #C9B99A;
+
+  --theme-glass: rgba(5, 5, 5, 0.75);
+  --theme-gold-border: rgba(212, 175, 55, 0.28);
 }
+
 
 body {
   background: var(--theme-background);
   color: var(--theme-darkText);
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: 
+    background-color 0.5s ease,
+    color 0.5s ease;
 }
 
-/* ── Luxury Black Glass card ──────────────────────── */
+
+/* ── Luxury Black Glass Wedding Card ───────────────── */
+
 .glass-card {
-  background: rgba(10, 10, 10, 0.70);
+
+  background: var(--theme-glass);
+
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(212, 175, 55, 0.22);
-  box-shadow:
-    0 8px 40px 0 rgba(0, 0, 0, 0.65),
-    0 1px 0 rgba(212, 175, 55, 0.18) inset,
-    0 -1px 0 rgba(212, 175, 55, 0.06) inset;
+
+  border: 1px solid var(--theme-gold-border);
+
   border-radius: 18px;
-  transition: background-color 0.5s ease, border-color 0.5s ease;
+
+  box-shadow:
+    0 8px 40px rgba(0,0,0,0.65),
+    inset 0 1px 0 rgba(212,175,55,0.18),
+    inset 0 -1px 0 rgba(212,175,55,0.06);
+
+  transition:
+    background-color .5s ease,
+    border-color .5s ease;
 }
+
 
 html.dark .glass-card {
-  background: rgba(10, 10, 10, 0.70);
-  border: 1px solid rgba(212, 175, 55, 0.22);
-  box-shadow:
-    0 8px 40px 0 rgba(0, 0, 0, 0.65),
-    0 1px 0 rgba(212, 175, 55, 0.18) inset;
+
+  background:
+    rgba(5,5,5,0.78);
+
+  border-color:
+    rgba(212,175,55,0.30);
+
 }
 
-/* ── Gold gradient text ───────────────────────────── */
+
+/* ── Luxury Gold Gradient Text ───────────────────── */
+
 .gold-gradient-text {
-  background: linear-gradient(135deg, #FFF8DC 0%, #D4AF37 40%, #A67C00 70%, #D4AF37 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+
+  background:
+    linear-gradient(
+      135deg,
+      #FFF8DC 0%,
+      #D4AF37 40%,
+      #A67C00 70%,
+      #D4AF37 100%
+    );
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+
 }
 
-/* ── Gold shimmer text ────────────────────────────── */
+
+/* ── Animated Gold Shine Effect ──────────────────── */
+
 @keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
+
+  0% {
+    background-position:-200% center;
+  }
+
+  100% {
+    background-position:200% center;
+  }
+
 }
+
 
 .gold-shimmer {
-  background: linear-gradient(90deg, #A67C00 0%, #D4AF37 25%, #FFF8DC 50%, #D4AF37 75%, #A67C00 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 4s linear infinite;
+
+  background:
+    linear-gradient(
+      90deg,
+      #A67C00,
+      #D4AF37,
+      #FFF8DC,
+      #D4AF37,
+      #A67C00
+    );
+
+  background-size:200% auto;
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+
+  animation:
+    shimmer 4s linear infinite;
+
 }
 
-/* ── Smooth scroll ───────────────────────────────── */
+
+/* ── Smooth Page Scroll ─────────────────────────── */
+
 .smooth-scroll {
-  scroll-behavior: smooth;
+
+  scroll-behavior:smooth;
+
 }
