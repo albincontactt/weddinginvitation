@@ -39,7 +39,19 @@ export function Footer() {
             Monday, 17 August 2026
           </p>
           
-          <p className="font-poppins text-lightText/60 text-xs">
+          <div className="mt-16 pt-8 border-t border-accent/20 max-w-sm mx-auto">
+            <h3 className="font-cinzel text-accent uppercase tracking-widest text-sm mb-4">Website Support</h3>
+            <p className="font-poppins text-lightText text-sm mb-4">
+              Website crafted with care.<br/>
+              For website development or software development assistance, feel free to contact us.
+            </p>
+            <div className="font-poppins text-lightText/80 text-sm flex flex-col gap-2">
+              <p>Email: albin.contactt@gmail.com</p>
+              <p>Phone: +91 90618 46394</p>
+            </div>
+          </div>
+          
+          <p className="font-poppins text-lightText/60 text-xs mt-12">
             Made with <span className="text-red-400 animate-pulse inline-block drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]">❤️</span> for J & V
           </p>
         </FadeIn>

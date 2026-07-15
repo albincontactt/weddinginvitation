@@ -6,21 +6,21 @@ export function BrideGroomSection() {
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-8">
           
-          {/* Bride */}
+          {/* Groom */}
           <div className="flex-1 text-center md:text-right w-full">
             <FadeIn direction="left" delay={0.2}>
               <div className="flex flex-col items-center md:items-end">
-                <span className="font-cinzel text-accent tracking-[0.2em] uppercase text-sm mb-4 block">The Bride</span>
+                <span className="font-cinzel text-accent tracking-[0.2em] uppercase text-sm mb-4 block">The Groom</span>
                 <h3 className="font-cormorant text-5xl md:text-6xl text-darkText font-bold mb-6">
-                  VANDANA
+                  JOJI
                 </h3>
                 <p className="font-poppins text-lightText max-w-sm text-sm md:text-base leading-relaxed whitespace-pre-line">
-                  D/o Mr. K. Vijayan &amp; Mrs. V. G. Jayakumari{"\n"}
-                  Kanjiranagatil House{"\n"}
-                  Kacheriparambu P.O.{"\n"}
-                  Palakkad District{"\n"}
-                  Kerala – 678601{"\n"}
-                  Phone: +91 9495863301
+                  S/o Mr. K. K. Johny &amp; Mrs. Viji Johny{"\n"}
+                  Kurumapillil House{"\n"}
+                  Pathirikode P.O.{"\n"}
+                  Malappuram District{"\n"}
+                  Kerala – 679326{"\n"}
+                  Phone: +91 9745614095
                 </p>
               </div>
             </FadeIn>
@@ -35,21 +35,21 @@ export function BrideGroomSection() {
             </FadeIn>
           </div>
 
-          {/* Groom */}
+          {/* Bride */}
           <div className="flex-1 text-center md:text-left w-full">
             <FadeIn direction="right" delay={0.6}>
               <div className="flex flex-col items-center md:items-start">
-                <span className="font-cinzel text-accent tracking-[0.2em] uppercase text-sm mb-4 block">The Groom</span>
+                <span className="font-cinzel text-accent tracking-[0.2em] uppercase text-sm mb-4 block">The Bride</span>
                 <h3 className="font-cormorant text-5xl md:text-6xl text-darkText font-bold mb-6">
-                  JOJI
+                  VANDANA
                 </h3>
                 <p className="font-poppins text-lightText max-w-sm text-sm md:text-base leading-relaxed whitespace-pre-line">
-                  S/o Mr. K. K. Johny &amp; Mrs. Viji Johny{"\n"}
-                  Kurumapillil House{"\n"}
-                  Pathirikode P.O.{"\n"}
-                  Malappuram District{"\n"}
-                  Kerala – 679326{"\n"}
-                  Phone: +91 9745614095
+                  D/o Mr. K. Vijayan &amp; Mrs. V. G. Jayakumari{"\n"}
+                  Kanjiranagatil House{"\n"}
+                  Kacheriparambu P.O.{"\n"}
+                  Palakkad District{"\n"}
+                  Kerala – 678601{"\n"}
+                  Phone: +91 9495863301
                 </p>
               </div>
             </FadeIn>

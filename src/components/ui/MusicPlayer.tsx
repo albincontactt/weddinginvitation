@@ -17,19 +17,14 @@ export function MusicPlayer() {
     audioRef.current.loop = true;
     audioRef.current.volume = 0; // Start at 0 for fade in
     
-    // Load preference
-    const savedPref = localStorage.getItem("musicPlaying");
-    if (savedPref === "true") {
-      // Browsers often block autoplay, so we can't guarantee this works without user interaction,
-      // but we try. If it fails, state will remain false.
-      audioRef.current.play().then(() => {
-        setIsPlaying(true);
-        fadeIn();
-      }).catch(() => {
-        setIsPlaying(false);
-        localStorage.setItem("musicPlaying", "false");
-      });
-    }
+    // Attempt to play automatically
+    audioRef.current.play().then(() => {
+      setIsPlaying(true);
+      fadeIn();
+    }).catch(() => {
+      // Browser autoplay was blocked; gracefully fallback to manual play
+      setIsPlaying(false);
+    });
 
     return () => {
       if (audioRef.current) {

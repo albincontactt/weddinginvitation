@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { FadeIn } from "../animations/FadeIn";
-import { Button } from "../ui/Button";
-import { Calendar as CalendarIcon } from "lucide-react";
 
 export function CountdownSection() {
   const targetDate = new Date("2026-08-17T00:00:00").getTime();
@@ -59,16 +57,6 @@ export function CountdownSection() {
             <TimeBlock value={timeLeft.minutes} label="Minutes" />
             <div className="text-2xl md:text-4xl text-accent font-cormorant pb-8">:</div>
             <TimeBlock value={timeLeft.seconds} label="Seconds" />
-          </div>
-          
-          <div className="flex justify-center">
-            <Button 
-              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Joji+%26+Vandana+Wedding&dates=20260817/20260818&details=Join+us+as+we+celebrate+our+wedding+together.&location=St.+George+Orthodox+Church,+Puliyakode+and+Hi-Life+Convention+Centre,+Anjilangadi" 
-              variant="outline"
-            >
-              <CalendarIcon className="w-5 h-5" />
-              📅 Save Our Wedding Date
-            </Button>
           </div>
         </FadeIn>
       </div>
