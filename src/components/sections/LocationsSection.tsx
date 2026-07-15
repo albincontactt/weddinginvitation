@@ -8,8 +8,10 @@ import { motion } from "framer-motion";
 
 export function LocationsSection() {
   return (
-    <section id="locations" className="py-24 relative bg-[url('https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-fixed bg-center">
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0" />
+    <section id="locations" className="py-24 relative overflow-hidden bg-transparent">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#D4AF37]/4 to-transparent pointer-events-none" />
+      <span className="absolute top-4 left-6 text-[#D4AF37]/20 text-3xl pointer-events-none select-none">✿</span>
+      <span className="absolute top-4 right-6 text-[#D4AF37]/20 text-3xl pointer-events-none select-none">✿</span>
       
       <div className="container mx-auto px-4 max-w-5xl relative z-10">
         <div className="flex flex-col md:flex-row gap-12">

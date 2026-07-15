@@ -5,13 +5,14 @@ import { GlassCard } from "../ui/GlassCard";
 
 export function LoveStorySection() {
   return (
-    <section id="love-story" className="py-24 relative overflow-hidden">
-      {/* Decorative side flowers */}
-      <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 opacity-20 pointer-events-none">
-        <svg width="400" height="600" viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M100 0C100 0 150 100 200 150C200 150 150 200 100 300C100 300 50 200 0 150C0 150 50 100 100 0Z" fill="#DAB8B8"/>
-        </svg>
-      </div>
+    <section id="love-story" className="py-24 relative overflow-hidden bg-transparent">
+      {/* Floral corner ornaments */}
+      <span className="absolute top-6 left-6 text-[#D4AF37]/20 text-4xl pointer-events-none select-none">✿</span>
+      <span className="absolute top-6 right-6 text-[#D4AF37]/20 text-4xl pointer-events-none select-none">✿</span>
+      <span className="absolute bottom-6 left-6 text-[#D4AF37]/20 text-4xl pointer-events-none select-none">❋</span>
+      <span className="absolute bottom-6 right-6 text-[#D4AF37]/20 text-4xl pointer-events-none select-none">❋</span>
+      {/* Soft glow */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/4 via-transparent to-[#D4AF37]/4 pointer-events-none" />
       
       <div className="container mx-auto px-4 max-w-4xl relative z-10 text-center">
         <FadeIn direction="up">

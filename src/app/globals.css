@@ -13,19 +13,20 @@
 }
 
 :root {
-  --theme-background: #FFF8F8;
-  --theme-primary: #DAB8B8;
-  --theme-accent: #C9A66B;
-  --theme-darkText: #3B3B3B;
-  --theme-lightText: #777777;
+  /* ── Deep Midnight Black + Gold luxury palette ── */
+  --theme-background: #080808;
+  --theme-primary:    #F8F4EC;
+  --theme-accent:     #D4AF37;
+  --theme-darkText:   #F5F0E4;
+  --theme-lightText:  #C9B99A;
 }
 
 html.dark {
-  --theme-background: #0d0d0d;
-  --theme-primary: #8c6e6e;
-  --theme-accent: #e5b967;
-  --theme-darkText: #f2efe9;
-  --theme-lightText: #b3b0a8;
+  --theme-background: #080808;
+  --theme-primary:    #F8F4EC;
+  --theme-accent:     #D4AF37;
+  --theme-darkText:   #F5F0E4;
+  --theme-lightText:  #C9B99A;
 }
 
 body {
@@ -34,28 +35,52 @@ body {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
+/* ── Luxury Black Glass card ──────────────────────── */
 .glass-card {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(201, 166, 107, 0.4);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
-  border-radius: 16px;
+  background: rgba(10, 10, 10, 0.70);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  box-shadow:
+    0 8px 40px 0 rgba(0, 0, 0, 0.65),
+    0 1px 0 rgba(212, 175, 55, 0.18) inset,
+    0 -1px 0 rgba(212, 175, 55, 0.06) inset;
+  border-radius: 18px;
   transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 
 html.dark .glass-card {
-  background: rgba(10, 10, 10, 0.4);
-  border: 1px solid rgba(229, 185, 103, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  background: rgba(10, 10, 10, 0.70);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  box-shadow:
+    0 8px 40px 0 rgba(0, 0, 0, 0.65),
+    0 1px 0 rgba(212, 175, 55, 0.18) inset;
 }
 
+/* ── Gold gradient text ───────────────────────────── */
 .gold-gradient-text {
-  background: linear-gradient(to right, var(--theme-accent), #E2C792, var(--theme-accent));
+  background: linear-gradient(135deg, #FFF8DC 0%, #D4AF37 40%, #A67C00 70%, #D4AF37 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* ── Gold shimmer text ────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.gold-shimmer {
+  background: linear-gradient(90deg, #A67C00 0%, #D4AF37 25%, #FFF8DC 50%, #D4AF37 75%, #A67C00 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ── Smooth scroll ───────────────────────────────── */
 .smooth-scroll {
   scroll-behavior: smooth;
 }

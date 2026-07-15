@@ -124,8 +124,13 @@ export function GallerySection() {
   };
 
   return (
-    <section id="gallery" className="py-24 relative overflow-hidden bg-background">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <section id="gallery" className="py-24 relative overflow-hidden bg-transparent">
+      {/* Floral border lines */}
+      <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37]/30 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37]/30 to-transparent" />
+      <span className="absolute top-4 left-6 text-[#D4AF37]/20 text-3xl pointer-events-none select-none">✿</span>
+      <span className="absolute top-4 right-6 text-[#D4AF37]/20 text-3xl pointer-events-none select-none">✿</span>
+      <div className="container mx-auto px-4 max-w-6xl relative z-10">
         <FadeIn direction="up">
           <h2 className="font-cormorant text-4xl md:text-5xl text-darkText font-bold text-center mb-16">
             Our Beautiful Moments

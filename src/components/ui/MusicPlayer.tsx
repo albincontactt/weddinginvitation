@@ -17,13 +17,29 @@ export function MusicPlayer() {
     audioRef.current.loop = true;
     audioRef.current.volume = 0; // Start at 0 for fade in
     
-    // Attempt to play automatically
+    // Attempt autoplay immediately
+    let started = false;
     audioRef.current.play().then(() => {
       setIsPlaying(true);
       fadeIn();
+      started = true;
     }).catch(() => {
-      // Browser autoplay was blocked; gracefully fallback to manual play
+      // Autoplay blocked — wait for first user interaction anywhere on page
       setIsPlaying(false);
+      const startOnInteraction = () => {
+        if (started || !audioRef.current) return;
+        audioRef.current.play().then(() => {
+          setIsPlaying(true);
+          fadeIn();
+          started = true;
+        }).catch(() => {});
+        document.removeEventListener("click",      startOnInteraction);
+        document.removeEventListener("touchstart", startOnInteraction);
+        document.removeEventListener("keydown",    startOnInteraction);
+      };
+      document.addEventListener("click",      startOnInteraction);
+      document.addEventListener("touchstart", startOnInteraction);
+      document.addEventListener("keydown",    startOnInteraction);
     });
 
     return () => {

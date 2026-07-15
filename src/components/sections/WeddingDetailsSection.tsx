@@ -31,8 +31,17 @@ export function WeddingDetailsSection() {
   ];
 
   return (
-    <section id="details" className="py-24 relative bg-background">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <section id="details" className="py-24 relative overflow-hidden bg-transparent">
+      {/* Luxury gold border frame */}
+      <div className="absolute inset-4 md:inset-8 border border-[#D4AF37]/15 rounded-[2rem] pointer-events-none" />
+      {/* Corner ornaments */}
+      <span className="absolute top-6 left-6 text-[#D4AF37]/25 text-3xl pointer-events-none select-none">✦</span>
+      <span className="absolute top-6 right-6 text-[#D4AF37]/25 text-3xl pointer-events-none select-none">✦</span>
+      <span className="absolute bottom-6 left-6 text-[#D4AF37]/25 text-3xl pointer-events-none select-none">✦</span>
+      <span className="absolute bottom-6 right-6 text-[#D4AF37]/25 text-3xl pointer-events-none select-none">✦</span>
+      {/* Top centre flower */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 text-[#D4AF37]/20 text-5xl pointer-events-none select-none">✿</div>
+      <div className="container mx-auto px-4 relative z-10 max-w-6xl">
         <FadeIn direction="up">
           <h2 className="font-cormorant text-4xl md:text-5xl text-darkText font-bold text-center mb-16">
             Wedding Details

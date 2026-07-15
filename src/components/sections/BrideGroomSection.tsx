@@ -2,8 +2,16 @@ import { FadeIn } from "../animations/FadeIn";
 
 export function BrideGroomSection() {
   return (
-    <section id="couple" className="py-24 bg-white/40">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <section id="couple" className="py-24 relative bg-transparent overflow-hidden">
+      {/* Floral vine corner accents */}
+      <span className="absolute top-4 left-4 text-[#D4AF37]/20 text-4xl pointer-events-none select-none">✿</span>
+      <span className="absolute top-4 right-4 text-[#D4AF37]/20 text-4xl pointer-events-none select-none">✿</span>
+      <span className="absolute bottom-4 left-4 text-[#D4AF37]/20 text-4xl pointer-events-none select-none">❋</span>
+      <span className="absolute bottom-4 right-4 text-[#D4AF37]/20 text-4xl pointer-events-none select-none">❋</span>
+      {/* Inner side glow */}
+      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#D4AF37]/6 to-transparent pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#D4AF37]/6 to-transparent pointer-events-none" />
+      <div className="container mx-auto px-4 max-w-6xl relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-8">
           
           {/* Groom */}
