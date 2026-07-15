@@ -63,7 +63,7 @@ export function CountdownSection() {
           
           <div className="flex justify-center">
             <Button 
-              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Joji+Joney+%E2%9D%A4%EF%B8%8F+Vandana+Wedding&dates=20260817/20260818&details=Join+us+as+we+celebrate+our+wedding+together.&location=Church+%26+Reception" 
+              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Joji+%26+Vandana+Wedding&dates=20260817/20260818&details=Join+us+as+we+celebrate+our+wedding+together.&location=St.+George+Orthodox+Church,+Puliyakode+and+Hi-Life+Convention+Centre,+Anjilangadi" 
               variant="outline"
             >
               <CalendarIcon className="w-5 h-5" />

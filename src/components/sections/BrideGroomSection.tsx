@@ -14,8 +14,13 @@ export function BrideGroomSection() {
                 <h3 className="font-cormorant text-5xl md:text-6xl text-darkText font-bold mb-6">
                   VANDANA
                 </h3>
-                <p className="font-poppins text-lightText max-w-sm text-sm md:text-base leading-relaxed">
-                  Daughter of [Bride's Parents]
+                <p className="font-poppins text-lightText max-w-sm text-sm md:text-base leading-relaxed whitespace-pre-line">
+                  D/o Mr. K. Vijayan &amp; Mrs. V. G. Jayakumari{"\n"}
+                  Kanjiranagatil House{"\n"}
+                  Kacheriparambu P.O.{"\n"}
+                  Palakkad District{"\n"}
+                  Kerala – 678601{"\n"}
+                  Phone: +91 9495863301
                 </p>
               </div>
             </FadeIn>
@@ -36,10 +41,15 @@ export function BrideGroomSection() {
               <div className="flex flex-col items-center md:items-start">
                 <span className="font-cinzel text-accent tracking-[0.2em] uppercase text-sm mb-4 block">The Groom</span>
                 <h3 className="font-cormorant text-5xl md:text-6xl text-darkText font-bold mb-6">
-                  JOJI JONEY
+                  JOJI
                 </h3>
-                <p className="font-poppins text-lightText max-w-sm text-sm md:text-base leading-relaxed">
-                  Son of [Groom's Parents]
+                <p className="font-poppins text-lightText max-w-sm text-sm md:text-base leading-relaxed whitespace-pre-line">
+                  S/o Mr. K. K. Johny &amp; Mrs. Viji Johny{"\n"}
+                  Kurumapillil House{"\n"}
+                  Pathirikode P.O.{"\n"}
+                  Malappuram District{"\n"}
+                  Kerala – 679326{"\n"}
+                  Phone: +91 9745614095
                 </p>
               </div>
             </FadeIn>

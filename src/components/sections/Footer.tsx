@@ -36,7 +36,7 @@ export function Footer() {
           </div>
 
           <p className="font-cinzel text-accent uppercase tracking-[0.2em] text-sm mb-12">
-            17 August 2026
+            Monday, 17 August 2026
           </p>
           
           <p className="font-poppins text-lightText/60 text-xs">

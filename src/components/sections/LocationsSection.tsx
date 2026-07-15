@@ -33,9 +33,9 @@ export function LocationsSection() {
                   Church Ceremony
                 </h3>
                 <p className="font-poppins text-lightText mb-8 flex-grow">
-                  Join us as we exchange our vows at [INSERT CHURCH NAME], a place of spiritual significance to us.
+                  Join us as we exchange our vows at St. George Orthodox Church, Puliyakode, a place of spiritual significance to us.
                   <br /><br />
-                  Time: [INSERT TIME]
+                  Time: 10:00 AM
                 </p>
                 <Button href="https://maps.app.goo.gl/snAuVQFCfFYmzasi7" variant="primary">
                   <MapPin className="w-4 h-4" />
@@ -64,9 +64,9 @@ export function LocationsSection() {
                   Wedding Reception
                 </h3>
                 <p className="font-poppins text-lightText mb-8 flex-grow">
-                  Celebrate our union with an evening of dinner, drinks, and dancing at [INSERT AUDITORIUM NAME].
+                  Celebrate our union with an evening of dinner, drinks, and dancing at Hi-Life Convention Centre, Anjilangadi.
                   <br /><br />
-                  Time: [INSERT TIME]
+                  Time: 12:00 PM onwards
                 </p>
                 <Button href="https://maps.app.goo.gl/iLHG1TYKqqN1tEiz6" variant="primary">
                   <MapPin className="w-4 h-4" />

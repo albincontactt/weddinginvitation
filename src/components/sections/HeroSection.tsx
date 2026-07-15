@@ -59,7 +59,7 @@ export function HeroSection() {
         <FadeIn delay={1.4} direction="up">
           <div className="glass-card px-10 py-4 mb-16 inline-block">
             <p className="font-cinzel text-darkText font-semibold text-lg md:text-2xl tracking-[0.2em]">
-              17 / 8 / 2026
+              17 AUGUST 2026
             </p>
           </div>
         </FadeIn>

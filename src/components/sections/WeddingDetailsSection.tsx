@@ -6,25 +6,25 @@ export function WeddingDetailsSection() {
   const details = [
     {
       title: "Wedding Date",
-      value: "August 17, 2026",
+      value: "Monday, 17 August 2026",
       icon: <Calendar className="w-6 h-6 text-accent mb-4" />,
       delay: 0.2
     },
     {
       title: "Wedding Time",
-      value: "10:00 AM", // Placeholder since it wasn't provided
+      value: "10:00 AM onwards",
       icon: <Clock className="w-6 h-6 text-accent mb-4" />,
       delay: 0.4
     },
     {
-      title: "Church",
-      value: "St. Mary's Church", // Placeholder
+      title: "Holy Matrimony",
+      value: "St. George Orthodox Church, Puliyakode\n10:00 AM",
       icon: <MapPin className="w-6 h-6 text-accent mb-4" />,
       delay: 0.6
     },
     {
       title: "Reception",
-      value: "Grand Auditorium", // Placeholder
+      value: "Hi-Life Convention Centre, Anjilangadi\n12:00 PM onwards",
       icon: <MapPin className="w-6 h-6 text-accent mb-4" />,
       delay: 0.8
     }
@@ -47,7 +47,7 @@ export function WeddingDetailsSection() {
                 <h4 className="font-cinzel text-lg text-darkText font-bold mb-2">
                   {detail.title}
                 </h4>
-                <p className="font-poppins text-lightText">
+                <p className="font-poppins text-lightText whitespace-pre-line">
                   {detail.value}
                 </p>
               </GlassCard>
