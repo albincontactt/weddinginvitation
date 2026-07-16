@@ -122,7 +122,7 @@ export function HeroSection() {
 
         <FadeIn delay={0.55} direction="up">
           <h1 className="font-cormorant text-5xl md:text-7xl lg:text-9xl text-[#F5F0E8] font-bold mb-3 drop-shadow-[0_0_25px_rgba(212,175,55,0.25)]">
-            JOJI JONEY
+            JOJI JOHNY
           </h1>
           <p className="font-cormorant text-4xl md:text-6xl text-[#D4AF37] font-medium italic my-3 drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">
             &amp;

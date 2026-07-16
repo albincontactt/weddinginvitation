@@ -128,150 +128,259 @@ export function GlobalCinematicRings() {
   });
 
   /* ── 1. RINGS MOVEMENT (0.0 -> 0.85) ── */
-  // Rings start at the top-left and top-right corners of the screen.
-  const xLeft = useTransform(smooth, [0, 0.85], ["-45vw", "-18px"]);
-  const yLeft = useTransform(smooth, [0, 0.85], ["-40vh", "-5px"]);
+  const xLeft  = useTransform(smooth, [0, 0.85], ["-45vw", "-18px"]);
+  const yLeft  = useTransform(smooth, [0, 0.85], ["-40vh",  "-5px"]);
   const rotLeft = useTransform(smooth, [0, 0.85], [-80, -10]);
 
-  const xRight = useTransform(smooth, [0, 0.85], ["45vw", "18px"]);
-  const yRight = useTransform(smooth, [0, 0.85], ["-40vh", "-5px"]);
+  const xRight  = useTransform(smooth, [0, 0.85], ["45vw",  "18px"]);
+  const yRight  = useTransform(smooth, [0, 0.85], ["-40vh", "-5px"]);
   const rotRight = useTransform(smooth, [0, 0.85], [80, 15]);
 
-  /* ── 2. GLOW & BLOOM (0.85 -> 0.88) ── */
-  const glowOpacity = useTransform(smooth, [0.84, 0.86], [0, 1]);
-  const glowScale = useTransform(smooth, [0.84, 0.87], [0.5, 1.2]);
-  
-  const raysOpacity = useTransform(smooth, [0.85, 0.87], [0, 0.8]);
-  const raysRotate = useTransform(smooth, [0.85, 1], [0, 45]);
+  /* ── 2. GLOW & BLOOM (appears at interlock) ── */
+  const glowOpacity = useTransform(smooth, [0.82, 0.87], [0, 1]);
+  const glowScale   = useTransform(smooth, [0.82, 0.90], [0.4, 1.3]);
+  const raysOpacity = useTransform(smooth, [0.84, 0.88], [0, 0.85]);
+  const raysRotate  = useTransform(smooth, [0.85, 1.0],  [0, 60]);
+  const sparkOpacity = useTransform(smooth, [0.84, 0.88], [0, 1]);
 
-  // When scrolling past 0.95, fade out the fixed rings so they don't cover the footer awkwardly
-  const masterOpacity = useTransform(smooth, [0.95, 0.98], [1, 0]);
+  /* ── 3. INTERLOCK ARC overlay ── */
+  const arcOpacity  = useTransform(smooth, [0.82, 0.88], [0, 1]);
 
+  /* ── 4. FADE OUT near footer ── */
+  const masterOpacity = useTransform(smooth, [0.96, 0.99], [1, 0]);
+
+  /* Sparkle particles */
   const [sparks, setSparks] = useState<{ x: number; y: number; delay: number; size: number; color: string }[]>([]);
+  /* Floating dust */
+  const [dust, setDust] = useState<{ x: number; y: number; delay: number; dur: number }[]>([]);
+
   useEffect(() => {
-    const colors = ["#D4AF37", "#F5D060", "#FFF8DC", "#FFE066", "#FFFFFF"];
+    const sparkColors = ["#D4AF37", "#F5D060", "#FFF8DC", "#FFE066", "#FFFFFF", "#BAE6FD"];
     setSparks(
-      Array.from({ length: 40 }, () => ({
-        x: (Math.random() - 0.5) * 400,
-        y: (Math.random() - 0.5) * 400,
-        delay: Math.random() * 3,
-        size: Math.random() * 4 + 1,
-        color: colors[Math.floor(Math.random() * colors.length)],
+      Array.from({ length: 48 }, () => ({
+        x:     (Math.random() - 0.5) * 500,
+        y:     (Math.random() - 0.5) * 500,
+        delay: Math.random() * 4,
+        size:  Math.random() * 5 + 1.5,
+        color: sparkColors[Math.floor(Math.random() * sparkColors.length)],
+      }))
+    );
+    setDust(
+      Array.from({ length: 30 }, () => ({
+        x:   (Math.random() - 0.5) * 600,
+        y:   (Math.random() - 0.5) * 600,
+        delay: Math.random() * 5,
+        dur:   Math.random() * 4 + 5,
       }))
     );
   }, []);
 
   return (
-    <motion.div 
+    <motion.div
       className="fixed inset-0 z-20 pointer-events-none flex flex-col items-center justify-center overflow-hidden"
       style={{ opacity: masterOpacity }}
     >
-      <div className="relative w-full h-[400px] flex items-center justify-center">
-        
-        {/* Golden Bloom */}
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full z-0"
-          style={{
-            opacity: glowOpacity,
-            scale: glowScale,
-            background: "radial-gradient(circle, rgba(212,175,55,0.8) 0%, rgba(212,175,55,0.2) 30%, transparent 70%)",
-            filter: "blur(40px)",
-          }}
-        />
+      {/* ── Large ambient glow ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          width: "700px",
+          height: "700px",
+          opacity: glowOpacity,
+          scale: glowScale,
+          background:
+            "radial-gradient(circle, rgba(212,175,55,0.55) 0%, rgba(212,175,55,0.18) 35%, transparent 65%)",
+          filter: "blur(55px)",
+        }}
+      />
 
-        {/* Volumetric Light Rays */}
-        <motion.div
-          className="absolute top-1/2 left-1/2 flex items-center justify-center z-0"
-          style={{ opacity: raysOpacity, scale: glowScale, rotate: raysRotate }}
-        >
-          {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
-            <div
-              key={`ray-${angle}`}
-              className="absolute origin-left"
-              style={{
-                rotate: `${angle}deg`,
-                width: "250px",
-                height: "2px",
-                background: "linear-gradient(to right, rgba(255,248,220,0.8), transparent)",
-                filter: "blur(1px)",
-              }}
-            />
-          ))}
-        </motion.div>
+      {/* ── Tighter bright bloom ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          width: "280px",
+          height: "280px",
+          opacity: glowOpacity,
+          scale: glowScale,
+          background:
+            "radial-gradient(circle, rgba(255,248,220,0.9) 0%, rgba(212,175,55,0.4) 45%, transparent 75%)",
+          filter: "blur(20px)",
+        }}
+      />
 
-        {/* Cinematic Star Sparkles */}
-        <motion.div style={{ opacity: glowOpacity }} className="absolute top-1/2 left-1/2 flex items-center justify-center z-10">
-          {sparks.map((s, i) => (
-            <motion.div
-              key={`spark-${i}`}
-              className="absolute rounded-full"
-              style={{
-                width: s.size,
-                height: s.size,
-                marginLeft: s.x,
-                marginTop: s.y,
-                background: s.color,
-                boxShadow: `0 0 ${s.size * 3}px ${s.color}`,
-              }}
-              animate={{ scale: [0, 1.5, 0], opacity: [0, 1, 0] }}
-              transition={{
-                duration: 2 + Math.random(),
-                delay: s.delay,
-                repeat: Infinity,
-              }}
-            />
-          ))}
-        </motion.div>
+      {/* ── Lens flare streak ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-y-1/2"
+        style={{
+          width: "500px",
+          height: "2px",
+          marginLeft: "-250px",
+          opacity: glowOpacity,
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(255,248,220,0.6) 40%, rgba(255,255,255,0.9) 50%, rgba(255,248,220,0.6) 60%, transparent 100%)",
+          filter: "blur(2px)",
+        }}
+      />
 
-        {/* Engagement Ring (Left) */}
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
-          style={{ x: xLeft, y: yLeft, rotate: rotLeft }}
-        >
-          <div className="drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-            <EngagementRing />
-          </div>
-        </motion.div>
+      {/* ── Volumetric light rays ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 flex items-center justify-center"
+        style={{ opacity: raysOpacity, rotate: raysRotate }}
+      >
+        {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle) => (
+          <div
+            key={`ray-${angle}`}
+            className="absolute origin-left"
+            style={{
+              rotate: `${angle}deg`,
+              width:  angle % 90 === 0 ? "280px" : "180px",
+              height: angle % 90 === 0 ? "2px"   : "1.5px",
+              background:
+                "linear-gradient(to right, rgba(212,175,55,0.7), transparent)",
+              filter: "blur(1px)",
+            }}
+          />
+        ))}
+      </motion.div>
 
-        {/* Wedding Band (Right) */}
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
-          style={{ x: xRight, y: yRight, rotate: rotRight }}
-        >
-          <div className="drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-            <WeddingBand />
-          </div>
-        </motion.div>
-        
-        {/* INTERLOCK OVERLAY ARC (left ring passing in front) */}
-        <motion.div
-          style={{
-            x: xLeft,
-            y: yLeft,
-            rotate: rotLeft,
-            opacity: glowOpacity,
-          }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]"
-        >
-          <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-[220px] md:h-[220px] w-[140px] h-[140px]">
-            <defs>
-              <PlatinumDefs id="arcPlat" flip={false} />
-            </defs>
-            <path
-              d="M146 80 A66 66 0 0 0 80 14"
-              stroke="url(#arcPlat)"
-              strokeWidth="11"
-              strokeLinecap="round"
-              filter="url(#arcPlat-glow)"
-            />
-            <path d="M140.5 80 A60.5 60.5 0 0 0 80 19.5" stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.5" strokeLinecap="round" />
-            <path d="M151.5 80 A71.5 71.5 0 0 0 80 8.5" stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.5" strokeLinecap="round" />
-            <path d="M146 80 A66 66 0 0 0 80 14" stroke="#FFFFFF" strokeWidth="3" strokeDasharray="0.1 9" strokeLinecap="round" fill="none" opacity="0.95" />
-            <path d="M146 80 A66 66 0 0 0 80 14" stroke="#BAE6FD" strokeWidth="1" strokeDasharray="0.1 9" strokeLinecap="round" fill="none" opacity="0.8" />
-          </svg>
-        </motion.div>
+      {/* ── Diamond sparkles ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 flex items-center justify-center"
+        style={{ opacity: sparkOpacity }}
+      >
+        {sparks.map((s, i) => (
+          <motion.div
+            key={`spark-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width:      s.size,
+              height:     s.size,
+              marginLeft: s.x,
+              marginTop:  s.y,
+              background: s.color,
+              boxShadow:  `0 0 ${s.size * 3}px ${s.color}`,
+            }}
+            animate={{ scale: [0, 1.8, 0], opacity: [0, 1, 0] }}
+            transition={{
+              duration:    2 + Math.random(),
+              delay:       s.delay,
+              repeat:      Infinity,
+              repeatDelay: Math.random() * 1.5,
+              ease:        "easeOut",
+            }}
+          />
+        ))}
+      </motion.div>
 
-      </div>
+      {/* ── 4-point star sparkles ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 flex items-center justify-center"
+        style={{ opacity: sparkOpacity }}
+      >
+        {[
+          { x: -100, y: -80 }, { x: 110, y: -90 },
+          { x: -130, y: 60 }, { x: 120, y: 70 },
+          { x: 0,    y: -140 }, { x: -60, y: 130 },
+          { x: 70,   y: 120 },
+        ].map((pos, i) => (
+          <motion.div
+            key={`star-${i}`}
+            className="absolute"
+            style={{ marginLeft: pos.x, marginTop: pos.y }}
+            animate={{ scale: [0, 1, 0], opacity: [0, 1, 0], rotate: [0, 45, 90] }}
+            transition={{
+              duration:    1.8,
+              delay:       i * 0.3,
+              repeat:      Infinity,
+              repeatDelay: 2,
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 0 L9 7 L16 8 L9 9 L8 16 L7 9 L0 8 L7 7 Z" fill="#D4AF37" opacity="0.9"/>
+              <path d="M8 0 L9 7 L16 8 L9 9 L8 16 L7 9 L0 8 L7 7 Z" fill="#FFF8DC" opacity="0.5"/>
+            </svg>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* ── Floating golden dust ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 flex items-center justify-center"
+        style={{ opacity: glowOpacity }}
+      >
+        {dust.map((d, i) => (
+          <motion.div
+            key={`dust-${i}`}
+            className="absolute rounded-full bg-[#D4AF37]"
+            style={{
+              width:      2,
+              height:     2,
+              marginLeft: d.x,
+              marginTop:  d.y,
+              filter:     "blur(0.5px)",
+            }}
+            animate={{ y: [0, -60], opacity: [0, 0.7, 0] }}
+            transition={{
+              duration:    d.dur,
+              repeat:      Infinity,
+              delay:       d.delay,
+              ease:        "easeInOut",
+            }}
+          />
+        ))}
+      </motion.div>
+
+      {/* ── Warm ambient halo ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          width:  "350px",
+          height: "350px",
+          opacity: glowOpacity,
+          background:
+            "radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 70%)",
+          filter: "blur(5px)",
+        }}
+        animate={{ scale: [1, 1.08, 1] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* ── Engagement Ring (Left) ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+        style={{ x: xLeft, y: yLeft, rotate: rotLeft }}
+      >
+        <div className="drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+          <EngagementRing />
+        </div>
+      </motion.div>
+
+      {/* ── Wedding Band (Right) ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+        style={{ x: xRight, y: yRight, rotate: rotRight }}
+      >
+        <div className="drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+          <WeddingBand />
+        </div>
+      </motion.div>
+
+      {/* ── Interlock Overlay Arc (left ring front portion) ── */}
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]"
+        style={{ x: xLeft, y: yLeft, rotate: rotLeft, opacity: arcOpacity }}
+      >
+        <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-[220px] md:h-[220px] w-[140px] h-[140px]">
+          <defs>
+            <PlatinumDefs id="arcPlat" flip={false} />
+          </defs>
+          <path d="M146 80 A66 66 0 0 0 80 14" stroke="url(#arcPlat)" strokeWidth="11" strokeLinecap="round" filter="url(#arcPlat-glow)" />
+          <path d="M140.5 80 A60.5 60.5 0 0 0 80 19.5" stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.5" strokeLinecap="round" />
+          <path d="M151.5 80 A71.5 71.5 0 0 0 80 8.5"  stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.5" strokeLinecap="round" />
+          <path d="M146 80 A66 66 0 0 0 80 14" stroke="#FFFFFF" strokeWidth="3" strokeDasharray="0.1 9" strokeLinecap="round" fill="none" opacity="0.95" />
+          <path d="M146 80 A66 66 0 0 0 80 14" stroke="#BAE6FD" strokeWidth="1" strokeDasharray="0.1 9" strokeLinecap="round" fill="none" opacity="0.8" />
+        </svg>
+      </motion.div>
     </motion.div>
   );
 }

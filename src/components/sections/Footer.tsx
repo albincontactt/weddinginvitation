@@ -30,7 +30,7 @@ export function Footer() {
           <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mb-8" />
           
           <div className="flex items-center justify-center gap-4 text-darkText font-cormorant text-2xl md:text-3xl font-bold mb-4">
-            <span>JOJI JONEY</span>
+            <span>JOJI JOHNY</span>
             <span className="text-red-400 text-sm md:text-xl animate-pulse drop-shadow-[0_0_10px_rgba(248,113,113,0.8)]">❤️</span>
             <span>VANDANA</span>
           </div>
