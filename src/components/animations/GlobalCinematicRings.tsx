@@ -4,253 +4,391 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 
 /* ─────────────────────────────────────────────────────────
-   Platinum Defs - reusable gradients for realistic metal
+   Shared SVG defs for gold gradients (rendered once)
 ───────────────────────────────────────────────────────── */
-function PlatinumDefs({ id, flip }: { id: string; flip?: boolean }) {
+function GoldDefs() {
   return (
-    <>
-      <linearGradient id={id} x1={flip ? "150" : "10"} y1="10" x2={flip ? "10" : "150"} y2="150" gradientUnits="userSpaceOnUse">
-        <stop offset="0%"   stopColor="#F8FAFC" />
-        <stop offset="20%"  stopColor="#94A3B8" />
-        <stop offset="45%"  stopColor="#FFFFFF" />
-        <stop offset="70%"  stopColor="#64748B" />
-        <stop offset="90%"  stopColor="#E2E8F0" />
-        <stop offset="100%" stopColor="#F8FAFC" />
+    <defs>
+      {/* ── Rich warm gold band gradient ── */}
+      <linearGradient id="goldBand" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stopColor="#FFF5CC" />
+        <stop offset="12%"  stopColor="#D4AF37" />
+        <stop offset="28%"  stopColor="#FFE066" />
+        <stop offset="48%"  stopColor="#B8860B" />
+        <stop offset="65%"  stopColor="#FFD700" />
+        <stop offset="82%"  stopColor="#C8960C" />
+        <stop offset="100%" stopColor="#FFF0A0" />
       </linearGradient>
-      <linearGradient id={`${id}-shimmer`} x1={flip ? "130" : "30"} y1="30" x2={flip ? "30" : "130"} y2="130" gradientUnits="userSpaceOnUse">
+
+      {/* ── Flip variant for right ring ── */}
+      <linearGradient id="goldBandFlip" x1="100%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%"   stopColor="#FFF5CC" />
+        <stop offset="12%"  stopColor="#D4AF37" />
+        <stop offset="28%"  stopColor="#FFE066" />
+        <stop offset="48%"  stopColor="#B8860B" />
+        <stop offset="65%"  stopColor="#FFD700" />
+        <stop offset="82%"  stopColor="#C8960C" />
+        <stop offset="100%" stopColor="#FFF0A0" />
+      </linearGradient>
+
+      {/* ── Shimmer highlight sweep ── */}
+      <linearGradient id="goldShimmer" x1="20%" y1="20%" x2="80%" y2="80%">
         <stop offset="0%"   stopColor="#ffffff" stopOpacity="0" />
-        <stop offset="45%"  stopColor="#ffffff" stopOpacity="0.85" />
+        <stop offset="40%"  stopColor="#ffffff" stopOpacity="0.75" />
         <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
       </linearGradient>
-      <filter id={`${id}-glow`} x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="3" result="blur" />
+
+      {/* ── Diamond facets ── */}
+      <radialGradient id="diamondCore" cx="40%" cy="30%" r="60%">
+        <stop offset="0%"   stopColor="#FFFFFF" />
+        <stop offset="35%"  stopColor="#E8F8FF" />
+        <stop offset="70%"  stopColor="#B9E8FF" />
+        <stop offset="100%" stopColor="#7DD3FC" stopOpacity="0.5" />
+      </radialGradient>
+
+      <linearGradient id="diamondFacetA" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stopColor="#FFFFFF" />
+        <stop offset="100%" stopColor="#BAE6FD" />
+      </linearGradient>
+      <linearGradient id="diamondFacetB" x1="100%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%"   stopColor="#E0F2FE" />
+        <stop offset="100%" stopColor="#FFFFFF" />
+      </linearGradient>
+
+      {/* ── Glow filter ── */}
+      <filter id="goldGlow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="4" result="blur" />
         <feMerge>
           <feMergeNode in="blur" />
           <feMergeNode in="SourceGraphic" />
         </feMerge>
       </filter>
 
-      {/* Diamond Gradients */}
-      <linearGradient id="diamondFacet1" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#FFFFFF" />
-        <stop offset="100%" stopColor="#E0F2FE" />
-      </linearGradient>
-      <linearGradient id="diamondFacet2" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#BAE6FD" />
-        <stop offset="100%" stopColor="#F8FAFC" />
-      </linearGradient>
-      <linearGradient id="diamondFacet3" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stopColor="#FFFFFF" />
-        <stop offset="100%" stopColor="#7DD3FC" />
-      </linearGradient>
-      <linearGradient id="diamondFacet4" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#E0F2FE" />
-        <stop offset="100%" stopColor="#BAE6FD" />
-      </linearGradient>
-      <radialGradient id="diamondGlowGradient" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-        <stop offset="40%" stopColor="#BAE6FD" stopOpacity="0.6" />
-        <stop offset="100%" stopColor="#38BDF8" stopOpacity="0" />
-      </radialGradient>
-    </>
+      <filter id="diamondGlow" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
   );
 }
 
 /* ─────────────────────────────────────────────────────────
-   Base Ring
+   Engagement Ring — gold band with solitaire diamond
 ───────────────────────────────────────────────────────── */
-function PlatinumRingBase({ gradientId, shimmer }: { gradientId: string; shimmer?: boolean }) {
+function EngagementRing({ size }: { size: number }) {
   return (
-    <>
-      <circle cx="80" cy="80" r="73" stroke={`url(#${gradientId})`} strokeWidth="1" strokeOpacity="0.4" />
-      <circle cx="80" cy="80" r="66" stroke={`url(#${gradientId})`} strokeWidth="11" filter={`url(#${gradientId}-glow)`} />
-      {shimmer && (
-        <circle cx="80" cy="80" r="66" stroke={`url(#${gradientId}-shimmer)`} strokeWidth="11" strokeDasharray="60 350" strokeDashoffset="0" />
-      )}
-      <circle cx="80" cy="80" r="60.5" stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.5" />
-      <circle cx="80" cy="80" r="71.5" stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.5" />
-    </>
-  );
-}
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 160 160"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <GoldDefs />
 
-/* ─────────────────────────────────────────────────────────
-   Engagement Ring (Solitaire + Pavé)
-───────────────────────────────────────────────────────── */
-function EngagementRing() {
-  return (
-    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-[220px] md:h-[220px] w-[140px] h-[140px]">
-      <defs>
-        <PlatinumDefs id="platLeft" flip={false} />
-      </defs>
-      <PlatinumRingBase gradientId="platLeft" shimmer />
-      
-      {/* Pavé */}
-      <circle cx="80" cy="80" r="66" stroke="#FFFFFF" strokeWidth="3" strokeDasharray="0.1 9" strokeLinecap="round" fill="none" opacity="0.95" />
-      <circle cx="80" cy="80" r="66" stroke="#BAE6FD" strokeWidth="1" strokeDasharray="0.1 9" strokeLinecap="round" fill="none" opacity="0.8" />
-      
-      {/* Solitaire Diamond */}
-      <g transform="translate(33.4, 33.4) rotate(-45)">
-        <ellipse cx="0" cy="-9" rx="28" ry="28" fill="url(#diamondGlowGradient)" opacity="0.9" />
-        <path d="M-13,-2 L-15,-9 M13,-2 L15,-9" stroke="url(#platLeft)" strokeWidth="2.5" strokeLinecap="round" />
-        <polygon points="-16,-9 16,-9 20,-2 -20,-2" fill="url(#diamondFacet1)" />
-        <polygon points="-20,-2 0,18 20,-2" fill="url(#diamondFacet2)" />
-        <polygon points="-16,-9 0,-2 16,-9" fill="url(#diamondFacet3)" />
-        <polygon points="-20,-2 0,-2 0,18" fill="url(#diamondFacet4)" />
-        <path d="M0,-14 L2.5,-6 L10,-3 L2.5,0 L0,8 L-2.5,0 L-10,-3 L-2.5,-6 Z" fill="#FFFFFF" opacity="0.9" />
+      {/* Outer edge highlight */}
+      <circle cx="80" cy="80" r="70" stroke="#FFF5CC" strokeWidth="1" strokeOpacity="0.5" />
+
+      {/* Main band */}
+      <circle
+        cx="80" cy="80" r="63"
+        stroke="url(#goldBand)"
+        strokeWidth="13"
+        filter="url(#goldGlow)"
+      />
+
+      {/* Shimmer overlay on band */}
+      <circle
+        cx="80" cy="80" r="63"
+        stroke="url(#goldShimmer)"
+        strokeWidth="13"
+        strokeDasharray="55 345"
+        strokeDashoffset="-20"
+      />
+
+      {/* Inner edge highlight */}
+      <circle cx="80" cy="80" r="56.5" stroke="#FFE066" strokeWidth="1" strokeOpacity="0.6" />
+
+      {/* Prong basket (setting) */}
+      <g transform="translate(80,21)">
+        {/* Setting base */}
+        <rect x="-7" y="-4" width="14" height="12" rx="2" fill="url(#goldBand)" />
+        {/* Side prongs */}
+        <rect x="-9" y="-6" width="4" height="8" rx="1.5" fill="#D4AF37" />
+        <rect x="5"  y="-6" width="4" height="8" rx="1.5" fill="#D4AF37" />
+        <rect x="-7" y="-8" width="4" height="8" rx="1.5" fill="#D4AF37" />
+        <rect x="3"  y="-8" width="4" height="8" rx="1.5" fill="#D4AF37" />
       </g>
+
+      {/* Solitaire diamond (round brilliant) */}
+      <g transform="translate(80,14)" filter="url(#diamondGlow)">
+        {/* Girdle */}
+        <ellipse cx="0" cy="0" rx="11" ry="4" fill="#C8D8E8" opacity="0.6" />
+        {/* Crown facets */}
+        <polygon points="0,-13 11,0 -11,0"    fill="url(#diamondCore)"   opacity="0.95" />
+        <polygon points="0,-13 11,0 5,-7"     fill="url(#diamondFacetA)" opacity="0.85" />
+        <polygon points="0,-13 -11,0 -5,-7"   fill="url(#diamondFacetB)" opacity="0.85" />
+        <polygon points="0,-13 5,-7 -5,-7"    fill="#FFFFFF"             opacity="0.9" />
+        {/* Pavilion */}
+        <polygon points="11,0 -11,0 0,8"      fill="url(#diamondFacetB)" opacity="0.8" />
+        <polygon points="11,0 5,-7 0,8"       fill="#DCEEF8"             opacity="0.7" />
+        <polygon points="-11,0 -5,-7 0,8"     fill="#FFFFFF"             opacity="0.7" />
+        {/* Table highlight */}
+        <polygon points="0,-10 8,-2 -8,-2"    fill="#FFFFFF"             opacity="0.5" />
+        {/* Culet sparkle */}
+        <circle cx="0" cy="7" r="1.5" fill="#FFFFFF" opacity="0.9" />
+        {/* 4-point star gleam */}
+        <path d="M0,-15 L1,-10 L0,-5 L-1,-10 Z" fill="#FFFFFF" opacity="0.8" />
+        <path d="M-6,-9 L-2,-8 L2,-8 L6,-9"     stroke="#FFFFFF" strokeWidth="0.5" opacity="0.5" />
+      </g>
+
+      {/* Micro pavé dots along top arc */}
+      {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => {
+        const r = 63;
+        const rad = ((deg - 90) * Math.PI) / 180;
+        const x = 80 + r * Math.cos(rad);
+        const y = 80 + r * Math.sin(rad);
+        return (
+          <circle
+            key={deg}
+            cx={x}
+            cy={y}
+            r="1.8"
+            fill="#FFFFFF"
+            opacity="0.6"
+          />
+        );
+      })}
     </svg>
   );
 }
 
 /* ─────────────────────────────────────────────────────────
-   Wedding Band (Matching Pavé)
+   Wedding Band — gold pavé band
 ───────────────────────────────────────────────────────── */
-function WeddingBand() {
+function WeddingBand({ size }: { size: number }) {
   return (
-    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-[220px] md:h-[220px] w-[140px] h-[140px]">
-      <defs>
-        <PlatinumDefs id="platRight" flip={true} />
-      </defs>
-      <PlatinumRingBase gradientId="platRight" shimmer />
-      <circle cx="80" cy="80" r="66" stroke="#FFFFFF" strokeWidth="3" strokeDasharray="0.1 9" strokeLinecap="round" fill="none" opacity="0.95" />
-      <circle cx="80" cy="80" r="66" stroke="#BAE6FD" strokeWidth="1" strokeDasharray="0.1 9" strokeLinecap="round" fill="none" opacity="0.8" />
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 160 160"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <GoldDefs />
+
+      {/* Outer edge */}
+      <circle cx="80" cy="80" r="70" stroke="#FFF5CC" strokeWidth="1" strokeOpacity="0.5" />
+
+      {/* Main band */}
+      <circle
+        cx="80" cy="80" r="63"
+        stroke="url(#goldBandFlip)"
+        strokeWidth="13"
+        filter="url(#goldGlow)"
+      />
+
+      {/* Shimmer overlay */}
+      <circle
+        cx="80" cy="80" r="63"
+        stroke="url(#goldShimmer)"
+        strokeWidth="13"
+        strokeDasharray="40 360"
+        strokeDashoffset="120"
+      />
+
+      {/* Inner edge */}
+      <circle cx="80" cy="80" r="56.5" stroke="#FFE066" strokeWidth="1" strokeOpacity="0.6" />
+
+      {/* Pavé channel — evenly spaced diamond dots */}
+      {Array.from({ length: 20 }, (_, i) => {
+        const r = 63;
+        const deg = (i / 20) * 360 - 90;
+        const rad = (deg * Math.PI) / 180;
+        const x = 80 + r * Math.cos(rad);
+        const y = 80 + r * Math.sin(rad);
+        return (
+          <g key={i} transform={`translate(${x},${y})`}>
+            <circle r="2.8" fill="#FFFFFF" opacity="0.85" />
+            <circle r="1.4" fill="#E8F8FF" opacity="0.9" />
+            {/* tiny star gleam on every 4th */}
+            {i % 4 === 0 && (
+              <>
+                <path d="M0,-4 L0.5,-1 L0,1 L-0.5,-1 Z" fill="white" opacity="0.9" />
+                <path d="M-4,0 L-1,0.5 L1,0 L-1,-0.5 Z" fill="white" opacity="0.9" />
+              </>
+            )}
+          </g>
+        );
+      })}
     </svg>
   );
 }
 
+/* ─────────────────────────────────────────────────────────
+   Sparkle particles (generated once on client)
+───────────────────────────────────────────────────────── */
+type Spark = { x: number; y: number; delay: number; size: number; color: string };
+type Dust  = { x: number; y: number; delay: number; dur: number };
+
+/* ─────────────────────────────────────────────────────────
+   Main Component
+───────────────────────────────────────────────────────── */
 export function GlobalCinematicRings() {
   const { scrollYProgress } = useScroll();
 
+  /* Smooth spring so rings glide, not jump */
   const smooth = useSpring(scrollYProgress, {
-    damping: 40,
-    stiffness: 60,
+    damping: 38,
+    stiffness: 55,
     restDelta: 0.001,
   });
 
-  /* ── 1. RINGS MOVEMENT (0.0 -> 0.85) ── */
-  const xLeft  = useTransform(smooth, [0, 0.85, 1.0], ["-45vw", "-18px", "-18px"]);
-  const yLeft  = useTransform(smooth, [0, 0.85, 1.0], ["-40vh",  "0px",   "0px"]);
-  const rotLeft = useTransform(smooth, [0, 0.85, 1.0], [-80, -10, -10]);
+  /* ── POSITIONS ──────────────────────────────────────────
+     At scroll = 0   → rings sit at top-left / top-right
+                        corners of the viewport
+     At scroll = 0.82 → rings meet at screen center
+  ───────────────────────────────────────────────────────── */
+  const xLeft  = useTransform(smooth, [0, 0.82, 1], ["-47vw", "-20px", "-20px"]);
+  const yLeft  = useTransform(smooth, [0, 0.82, 1], ["-46vh",   "0px",   "0px"]);
+  const rotLeft = useTransform(smooth, [0, 0.82, 1],  [-65,       -8,      -8]);
 
-  const xRight  = useTransform(smooth, [0, 0.85, 1.0], ["45vw",  "18px", "18px"]);
-  const yRight  = useTransform(smooth, [0, 0.85, 1.0], ["-40vh", "0px",  "0px"]);
-  const rotRight = useTransform(smooth, [0, 0.85, 1.0], [80, 15, 15]);
+  const xRight  = useTransform(smooth, [0, 0.82, 1], ["47vw",  "20px",  "20px"]);
+  const yRight  = useTransform(smooth, [0, 0.82, 1], ["-46vh",  "0px",   "0px"]);
+  const rotRight = useTransform(smooth, [0, 0.82, 1],  [65,       12,      12]);
 
-  /* ── 2. GLOW & BLOOM (appears at interlock) ── */
-  const glowOpacity = useTransform(smooth, [0.82, 0.87], [0, 1]);
-  const glowScale   = useTransform(smooth, [0.82, 0.90], [0.4, 1.3]);
-  const raysOpacity = useTransform(smooth, [0.84, 0.88], [0, 0.85]);
-  const raysRotate  = useTransform(smooth, [0.85, 1.0],  [0, 60]);
-  const sparkOpacity = useTransform(smooth, [0.84, 0.88], [0, 1]);
+  /* ── GLOW & BLOOM (fires when rings meet) ─────────────── */
+  const glowOpacity  = useTransform(smooth, [0.79, 0.84], [0, 1]);
+  const glowScale    = useTransform(smooth, [0.79, 0.88], [0.3, 1.4]);
+  const raysOpacity  = useTransform(smooth, [0.81, 0.86], [0, 0.9]);
+  const raysRotate   = useTransform(smooth, [0.83, 1.0],  [0, 55]);
+  const sparkOpacity = useTransform(smooth, [0.81, 0.86], [0, 1]);
 
-  /* ── 3. INTERLOCK ARC overlay ── */
-  const arcOpacity  = useTransform(smooth, [0.82, 0.88], [0, 1]);
+  /* ── INTERLOCK ARC (left ring front portion) ─────────── */
+  const arcOpacity   = useTransform(smooth, [0.80, 0.85], [0, 1]);
 
-  /* ── 4. FADE OUT near footer ── */
+  /* ── FADE OUT near footer ─────────────────────────────── */
   const masterOpacity = useTransform(smooth, [0.96, 0.99], [1, 0]);
 
-  /* Sparkle particles */
-  const [sparks, setSparks] = useState<{ x: number; y: number; delay: number; size: number; color: string }[]>([]);
-  /* Floating dust */
-  const [dust, setDust] = useState<{ x: number; y: number; delay: number; dur: number }[]>([]);
+  /* Client-side particles */
+  const [sparks, setSparks] = useState<Spark[]>([]);
+  const [dust,   setDust]   = useState<Dust[]>([]);
 
   useEffect(() => {
-    const sparkColors = ["#D4AF37", "#F5D060", "#FFF8DC", "#FFE066", "#FFFFFF", "#BAE6FD"];
+    const colors = ["#D4AF37", "#FFD700", "#FFF8DC", "#FFE066", "#FFFFFF", "#FFC300"];
     setSparks(
-      Array.from({ length: 48 }, () => ({
-        x:     (Math.random() - 0.5) * 500,
-        y:     (Math.random() - 0.5) * 500,
+      Array.from({ length: 52 }, () => ({
+        x:     (Math.random() - 0.5) * 520,
+        y:     (Math.random() - 0.5) * 520,
         delay: Math.random() * 4,
-        size:  Math.random() * 5 + 1.5,
-        color: sparkColors[Math.floor(Math.random() * sparkColors.length)],
+        size:  Math.random() * 5.5 + 1.5,
+        color: colors[Math.floor(Math.random() * colors.length)],
       }))
     );
     setDust(
-      Array.from({ length: 30 }, () => ({
-        x:   (Math.random() - 0.5) * 600,
-        y:   (Math.random() - 0.5) * 600,
+      Array.from({ length: 35 }, () => ({
+        x:     (Math.random() - 0.5) * 640,
+        y:     (Math.random() - 0.5) * 640,
         delay: Math.random() * 5,
         dur:   Math.random() * 4 + 5,
       }))
     );
   }, []);
 
+  /* Ring pixel sizes */
+  const ringSize = typeof window !== "undefined" && window.innerWidth < 768 ? 130 : 210;
+
   return (
     <motion.div
-      className="fixed inset-0 z-20 pointer-events-none flex flex-col items-center justify-center overflow-hidden"
+      className="fixed inset-0 z-20 pointer-events-none flex items-center justify-center overflow-hidden"
       style={{ opacity: masterOpacity }}
     >
-      {/* ── Large ambient glow ── */}
+      {/* ══ BLOOM LAYERS ══════════════════════════════════ */}
+
+      {/* Outer warm bloom */}
       <motion.div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
-          width: "700px",
-          height: "700px",
+          width: "750px", height: "750px",
           opacity: glowOpacity,
-          scale: glowScale,
+          scale:   glowScale,
           background:
-            "radial-gradient(circle, rgba(212,175,55,0.55) 0%, rgba(212,175,55,0.18) 35%, transparent 65%)",
-          filter: "blur(55px)",
+            "radial-gradient(circle, rgba(212,175,55,0.60) 0%, rgba(212,175,55,0.20) 35%, transparent 65%)",
+          filter: "blur(60px)",
         }}
       />
 
-      {/* ── Tighter bright bloom ── */}
+      {/* Tight bright core */}
       <motion.div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
-          width: "280px",
-          height: "280px",
+          width: "300px", height: "300px",
           opacity: glowOpacity,
-          scale: glowScale,
+          scale:   glowScale,
           background:
-            "radial-gradient(circle, rgba(255,248,220,0.9) 0%, rgba(212,175,55,0.4) 45%, transparent 75%)",
-          filter: "blur(20px)",
+            "radial-gradient(circle, rgba(255,248,180,0.95) 0%, rgba(212,175,55,0.50) 40%, transparent 70%)",
+          filter: "blur(18px)",
         }}
       />
 
-      {/* ── Lens flare streak ── */}
+      {/* Horizontal lens flare streak */}
       <motion.div
         className="absolute top-1/2 left-1/2 -translate-y-1/2"
         style={{
-          width: "500px",
-          height: "2px",
-          marginLeft: "-250px",
+          width: "600px", height: "2px",
+          marginLeft: "-300px",
           opacity: glowOpacity,
           background:
-            "linear-gradient(90deg, transparent 0%, rgba(255,248,220,0.6) 40%, rgba(255,255,255,0.9) 50%, rgba(255,248,220,0.6) 60%, transparent 100%)",
+            "linear-gradient(90deg, transparent 0%, rgba(255,230,50,0.55) 35%, rgba(255,255,200,0.95) 50%, rgba(255,230,50,0.55) 65%, transparent 100%)",
           filter: "blur(2px)",
         }}
       />
 
-      {/* ── Volumetric light rays ── */}
+      {/* Vertical flare */}
       <motion.div
-        className="absolute top-1/2 left-1/2 flex items-center justify-center"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2"
+        style={{
+          width: "2px", height: "400px",
+          marginTop: "-200px",
+          opacity: glowOpacity,
+          background:
+            "linear-gradient(180deg, transparent 0%, rgba(255,230,50,0.4) 35%, rgba(255,255,200,0.8) 50%, rgba(255,230,50,0.4) 65%, transparent 100%)",
+          filter: "blur(2px)",
+        }}
+      />
+
+      {/* ══ VOLUMETRIC LIGHT RAYS ═════════════════════════ */}
+      <motion.div
+        className="absolute top-1/2 left-1/2"
         style={{ opacity: raysOpacity, rotate: raysRotate }}
       >
-        {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle) => (
+        {[0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180, 202.5, 225, 247.5, 270, 292.5, 315, 337.5].map((angle) => (
           <div
-            key={`ray-${angle}`}
+            key={angle}
             className="absolute origin-left"
             style={{
               rotate: `${angle}deg`,
-              width:  angle % 90 === 0 ? "280px" : "180px",
-              height: angle % 90 === 0 ? "2px"   : "1.5px",
+              width:  angle % 90 === 0 ? "320px" : angle % 45 === 0 ? "220px" : "150px",
+              height: angle % 90 === 0 ? "2.5px" : "1.5px",
               background:
-                "linear-gradient(to right, rgba(212,175,55,0.7), transparent)",
+                "linear-gradient(to right, rgba(212,175,55,0.80), rgba(255,220,50,0.3), transparent)",
               filter: "blur(1px)",
             }}
           />
         ))}
       </motion.div>
 
-      {/* ── Diamond sparkles ── */}
+      {/* ══ SPARKLE PARTICLES ═════════════════════════════ */}
       <motion.div
         className="absolute top-1/2 left-1/2 flex items-center justify-center"
         style={{ opacity: sparkOpacity }}
       >
         {sparks.map((s, i) => (
           <motion.div
-            key={`spark-${i}`}
+            key={i}
             className="absolute rounded-full"
             style={{
               width:      s.size,
@@ -260,66 +398,73 @@ export function GlobalCinematicRings() {
               background: s.color,
               boxShadow:  `0 0 ${s.size * 3}px ${s.color}`,
             }}
-            animate={{ scale: [0, 1.8, 0], opacity: [0, 1, 0] }}
+            animate={{ scale: [0, 2, 0], opacity: [0, 1, 0] }}
             transition={{
               duration:    2 + Math.random(),
               delay:       s.delay,
               repeat:      Infinity,
-              repeatDelay: Math.random() * 1.5,
+              repeatDelay: Math.random() * 2,
               ease:        "easeOut",
             }}
           />
         ))}
       </motion.div>
 
-      {/* ── 4-point star sparkles ── */}
+      {/* ══ 4-POINT GOLD STARS ════════════════════════════ */}
       <motion.div
         className="absolute top-1/2 left-1/2 flex items-center justify-center"
         style={{ opacity: sparkOpacity }}
       >
         {[
-          { x: -100, y: -80 }, { x: 110, y: -90 },
-          { x: -130, y: 60 }, { x: 120, y: 70 },
-          { x: 0,    y: -140 }, { x: -60, y: 130 },
-          { x: 70,   y: 120 },
+          { x: -110, y: -90 }, { x: 120, y: -95 },
+          { x: -140, y:  55 }, { x: 130, y:  65 },
+          { x:    0, y: -155 },{ x:  -65, y: 135 },
+          { x:   75, y: 130 }, { x: -170, y: -10 },
+          { x:  175, y: -15 },
         ].map((pos, i) => (
           <motion.div
-            key={`star-${i}`}
+            key={i}
             className="absolute"
             style={{ marginLeft: pos.x, marginTop: pos.y }}
-            animate={{ scale: [0, 1, 0], opacity: [0, 1, 0], rotate: [0, 45, 90] }}
+            animate={{ scale: [0, 1.2, 0], opacity: [0, 1, 0], rotate: [0, 45, 90] }}
             transition={{
-              duration:    1.8,
-              delay:       i * 0.3,
-              repeat:      Infinity,
-              repeatDelay: 2,
+              duration: 2,
+              delay: i * 0.28,
+              repeat: Infinity,
+              repeatDelay: 2.5,
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M8 0 L9 7 L16 8 L9 9 L8 16 L7 9 L0 8 L7 7 Z" fill="#D4AF37" opacity="0.9"/>
-              <path d="M8 0 L9 7 L16 8 L9 9 L8 16 L7 9 L0 8 L7 7 Z" fill="#FFF8DC" opacity="0.5"/>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path
+                d="M9 0 L10.2 7.8 L18 9 L10.2 10.2 L9 18 L7.8 10.2 L0 9 L7.8 7.8 Z"
+                fill="#D4AF37" opacity="0.95"
+              />
+              <path
+                d="M9 0 L10.2 7.8 L18 9 L10.2 10.2 L9 18 L7.8 10.2 L0 9 L7.8 7.8 Z"
+                fill="#FFFFFF" opacity="0.45"
+              />
             </svg>
           </motion.div>
         ))}
       </motion.div>
 
-      {/* ── Floating golden dust ── */}
+      {/* ══ FLOATING GOLDEN DUST ══════════════════════════ */}
       <motion.div
         className="absolute top-1/2 left-1/2 flex items-center justify-center"
         style={{ opacity: glowOpacity }}
       >
         {dust.map((d, i) => (
           <motion.div
-            key={`dust-${i}`}
+            key={i}
             className="absolute rounded-full bg-[#D4AF37]"
             style={{
-              width:      2,
-              height:     2,
+              width:      2.5,
+              height:     2.5,
               marginLeft: d.x,
               marginTop:  d.y,
-              filter:     "blur(0.5px)",
+              filter:     "blur(0.4px)",
             }}
-            animate={{ y: [0, -60], opacity: [0, 0.7, 0] }}
+            animate={{ y: [0, -70], opacity: [0, 0.75, 0] }}
             transition={{
               duration:    d.dur,
               repeat:      Infinity,
@@ -330,55 +475,106 @@ export function GlobalCinematicRings() {
         ))}
       </motion.div>
 
-      {/* ── Warm ambient halo ── */}
+      {/* ══ PULSING AMBIENT HALO ══════════════════════════ */}
       <motion.div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
-          width:  "350px",
-          height: "350px",
+          width: "380px", height: "380px",
           opacity: glowOpacity,
           background:
-            "radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 70%)",
-          filter: "blur(5px)",
+            "radial-gradient(circle, rgba(212,175,55,0.14) 0%, transparent 70%)",
+          filter: "blur(6px)",
         }}
-        animate={{ scale: [1, 1.08, 1] }}
+        animate={{ scale: [1, 1.1, 1] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* ── Engagement Ring (Left) ── */}
+      {/* ══ ENGAGEMENT RING (from top-left) ═══════════════ */}
       <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
         style={{ x: xLeft, y: yLeft, rotate: rotLeft }}
       >
-        <div className="drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-          <EngagementRing />
-        </div>
+        <motion.div
+          animate={{ y: [0, -3, 0] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+          className="drop-shadow-[0_0_24px_rgba(212,175,55,0.5)]"
+        >
+          <EngagementRing size={ringSize} />
+        </motion.div>
       </motion.div>
 
-      {/* ── Wedding Band (Right) ── */}
+      {/* ══ WEDDING BAND (from top-right) ═════════════════ */}
       <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
         style={{ x: xRight, y: yRight, rotate: rotRight }}
       >
-        <div className="drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-          <WeddingBand />
-        </div>
+        <motion.div
+          animate={{ y: [0, 3, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          className="drop-shadow-[0_0_24px_rgba(212,175,55,0.5)]"
+        >
+          <WeddingBand size={ringSize} />
+        </motion.div>
       </motion.div>
 
-      {/* ── Interlock Overlay Arc (left ring front portion) ── */}
+      {/* ══ INTERLOCK ARC — left ring front portion ═══════ */}
       <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30"
         style={{ x: xLeft, y: yLeft, rotate: rotLeft, opacity: arcOpacity }}
       >
-        <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-[220px] md:h-[220px] w-[140px] h-[140px]">
+        <svg
+          width={ringSize}
+          height={ringSize}
+          viewBox="0 0 160 160"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <defs>
-            <PlatinumDefs id="arcPlat" flip={false} />
+            <linearGradient id="arcGold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stopColor="#FFF5CC" />
+              <stop offset="30%"  stopColor="#FFD700" />
+              <stop offset="60%"  stopColor="#D4AF37" />
+              <stop offset="100%" stopColor="#FFF0A0" />
+            </linearGradient>
+            <filter id="arcGlow" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
           </defs>
-          <path d="M146 80 A66 66 0 0 0 80 14" stroke="url(#arcPlat)" strokeWidth="11" strokeLinecap="round" filter="url(#arcPlat-glow)" />
-          <path d="M140.5 80 A60.5 60.5 0 0 0 80 19.5" stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.5" strokeLinecap="round" />
-          <path d="M151.5 80 A71.5 71.5 0 0 0 80 8.5"  stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.5" strokeLinecap="round" />
-          <path d="M146 80 A66 66 0 0 0 80 14" stroke="#FFFFFF" strokeWidth="3" strokeDasharray="0.1 9" strokeLinecap="round" fill="none" opacity="0.95" />
-          <path d="M146 80 A66 66 0 0 0 80 14" stroke="#BAE6FD" strokeWidth="1" strokeDasharray="0.1 9" strokeLinecap="round" fill="none" opacity="0.8" />
+          {/* Right-top quarter arc that overlaps the wedding band */}
+          <path
+            d="M143 80 A63 63 0 0 0 80 17"
+            stroke="url(#arcGold)"
+            strokeWidth="13"
+            strokeLinecap="round"
+            filter="url(#arcGlow)"
+          />
+          {/* Shimmer on arc */}
+          <path
+            d="M143 80 A63 63 0 0 0 80 17"
+            stroke="#FFFFFF"
+            strokeWidth="13"
+            strokeLinecap="round"
+            strokeDasharray="30 200"
+            strokeDashoffset="-10"
+            opacity="0.4"
+          />
+          {/* Pavé dots on arc */}
+          {[0, 22, 45, 68, 90].map((pct, i) => {
+            const t = pct / 100;
+            const startAngle = 0; // 3 o'clock
+            const endAngle   = -90; // 12 o'clock
+            const angle = (startAngle + t * (endAngle - startAngle)) * (Math.PI / 180);
+            const r = 63;
+            const x = 80 + r * Math.cos(angle);
+            const y = 80 + r * Math.sin(angle);
+            return (
+              <circle key={i} cx={x} cy={y} r="2.2" fill="#FFFFFF" opacity="0.85" />
+            );
+          })}
         </svg>
       </motion.div>
     </motion.div>
