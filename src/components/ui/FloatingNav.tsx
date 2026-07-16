@@ -31,6 +31,7 @@ export function FloatingNav() {
     { name: "Couple", href: "#couple" },
     { name: "Details", href: "#details" },
     { name: "Locations", href: "#locations" },
+    { name: "Rings", href: "#rings" },
   ];
 
   return (
