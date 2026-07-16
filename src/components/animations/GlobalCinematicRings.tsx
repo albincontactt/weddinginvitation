@@ -1,7 +1,13 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+}
 
 /* ─────────────────────────────────────────────────────────
    Shared SVG defs for gold gradients (rendered once)
@@ -9,7 +15,6 @@ import { useEffect, useState } from "react";
 function GoldDefs() {
   return (
     <defs>
-      {/* ── Rich warm gold band gradient ── */}
       <linearGradient id="goldBand" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%"   stopColor="#FFF5CC" />
         <stop offset="12%"  stopColor="#D4AF37" />
@@ -20,7 +25,6 @@ function GoldDefs() {
         <stop offset="100%" stopColor="#FFF0A0" />
       </linearGradient>
 
-      {/* ── Flip variant for right ring ── */}
       <linearGradient id="goldBandFlip" x1="100%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%"   stopColor="#FFF5CC" />
         <stop offset="12%"  stopColor="#D4AF37" />
@@ -31,14 +35,12 @@ function GoldDefs() {
         <stop offset="100%" stopColor="#FFF0A0" />
       </linearGradient>
 
-      {/* ── Shimmer highlight sweep ── */}
       <linearGradient id="goldShimmer" x1="20%" y1="20%" x2="80%" y2="80%">
         <stop offset="0%"   stopColor="#ffffff" stopOpacity="0" />
         <stop offset="40%"  stopColor="#ffffff" stopOpacity="0.75" />
         <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
       </linearGradient>
 
-      {/* ── Diamond facets ── */}
       <radialGradient id="diamondCore" cx="40%" cy="30%" r="60%">
         <stop offset="0%"   stopColor="#FFFFFF" />
         <stop offset="35%"  stopColor="#E8F8FF" />
@@ -50,12 +52,12 @@ function GoldDefs() {
         <stop offset="0%"   stopColor="#FFFFFF" />
         <stop offset="100%" stopColor="#BAE6FD" />
       </linearGradient>
+      
       <linearGradient id="diamondFacetB" x1="100%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%"   stopColor="#E0F2FE" />
         <stop offset="100%" stopColor="#FFFFFF" />
       </linearGradient>
 
-      {/* ── Glow filter ── */}
       <filter id="goldGlow" x="-40%" y="-40%" width="180%" height="180%">
         <feGaussianBlur stdDeviation="4" result="blur" />
         <feMerge>
@@ -75,146 +77,62 @@ function GoldDefs() {
   );
 }
 
-/* ─────────────────────────────────────────────────────────
-   Engagement Ring — gold band with solitaire diamond
-───────────────────────────────────────────────────────── */
 function EngagementRing({ size }: { size: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 160 160"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width={size} height={size} viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
       <GoldDefs />
-
-      {/* Outer edge highlight */}
       <circle cx="80" cy="80" r="70" stroke="#FFF5CC" strokeWidth="1" strokeOpacity="0.5" />
-
-      {/* Main band */}
-      <circle
-        cx="80" cy="80" r="63"
-        stroke="url(#goldBand)"
-        strokeWidth="13"
-        filter="url(#goldGlow)"
-      />
-
-      {/* Shimmer overlay on band */}
-      <circle
-        cx="80" cy="80" r="63"
-        stroke="url(#goldShimmer)"
-        strokeWidth="13"
-        strokeDasharray="55 345"
-        strokeDashoffset="-20"
-      />
-
-      {/* Inner edge highlight */}
+      <circle cx="80" cy="80" r="63" stroke="url(#goldBand)" strokeWidth="13" filter="url(#goldGlow)" />
+      <circle cx="80" cy="80" r="63" stroke="url(#goldShimmer)" strokeWidth="13" strokeDasharray="55 345" strokeDashoffset="-20" />
       <circle cx="80" cy="80" r="56.5" stroke="#FFE066" strokeWidth="1" strokeOpacity="0.6" />
-
-      {/* Prong basket (setting) */}
       <g transform="translate(80,21)">
-        {/* Setting base */}
         <rect x="-7" y="-4" width="14" height="12" rx="2" fill="url(#goldBand)" />
-        {/* Side prongs */}
         <rect x="-9" y="-6" width="4" height="8" rx="1.5" fill="#D4AF37" />
         <rect x="5"  y="-6" width="4" height="8" rx="1.5" fill="#D4AF37" />
         <rect x="-7" y="-8" width="4" height="8" rx="1.5" fill="#D4AF37" />
         <rect x="3"  y="-8" width="4" height="8" rx="1.5" fill="#D4AF37" />
       </g>
-
-      {/* Solitaire diamond (round brilliant) */}
       <g transform="translate(80,14)" filter="url(#diamondGlow)">
-        {/* Girdle */}
         <ellipse cx="0" cy="0" rx="11" ry="4" fill="#C8D8E8" opacity="0.6" />
-        {/* Crown facets */}
         <polygon points="0,-13 11,0 -11,0"    fill="url(#diamondCore)"   opacity="0.95" />
         <polygon points="0,-13 11,0 5,-7"     fill="url(#diamondFacetA)" opacity="0.85" />
         <polygon points="0,-13 -11,0 -5,-7"   fill="url(#diamondFacetB)" opacity="0.85" />
         <polygon points="0,-13 5,-7 -5,-7"    fill="#FFFFFF"             opacity="0.9" />
-        {/* Pavilion */}
         <polygon points="11,0 -11,0 0,8"      fill="url(#diamondFacetB)" opacity="0.8" />
         <polygon points="11,0 5,-7 0,8"       fill="#DCEEF8"             opacity="0.7" />
         <polygon points="-11,0 -5,-7 0,8"     fill="#FFFFFF"             opacity="0.7" />
-        {/* Table highlight */}
         <polygon points="0,-10 8,-2 -8,-2"    fill="#FFFFFF"             opacity="0.5" />
-        {/* Culet sparkle */}
         <circle cx="0" cy="7" r="1.5" fill="#FFFFFF" opacity="0.9" />
-        {/* 4-point star gleam */}
         <path d="M0,-15 L1,-10 L0,-5 L-1,-10 Z" fill="#FFFFFF" opacity="0.8" />
         <path d="M-6,-9 L-2,-8 L2,-8 L6,-9"     stroke="#FFFFFF" strokeWidth="0.5" opacity="0.5" />
       </g>
-
-      {/* Micro pavé dots along top arc */}
       {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => {
-        const r = 63;
         const rad = ((deg - 90) * Math.PI) / 180;
-        const x = 80 + r * Math.cos(rad);
-        const y = 80 + r * Math.sin(rad);
-        return (
-          <circle
-            key={deg}
-            cx={x}
-            cy={y}
-            r="1.8"
-            fill="#FFFFFF"
-            opacity="0.6"
-          />
-        );
+        const x = 80 + 63 * Math.cos(rad);
+        const y = 80 + 63 * Math.sin(rad);
+        return <circle key={deg} cx={x} cy={y} r="1.8" fill="#FFFFFF" opacity="0.6" />;
       })}
     </svg>
   );
 }
 
-/* ─────────────────────────────────────────────────────────
-   Wedding Band — gold pavé band
-───────────────────────────────────────────────────────── */
 function WeddingBand({ size }: { size: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 160 160"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width={size} height={size} viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
       <GoldDefs />
-
-      {/* Outer edge */}
       <circle cx="80" cy="80" r="70" stroke="#FFF5CC" strokeWidth="1" strokeOpacity="0.5" />
-
-      {/* Main band */}
-      <circle
-        cx="80" cy="80" r="63"
-        stroke="url(#goldBandFlip)"
-        strokeWidth="13"
-        filter="url(#goldGlow)"
-      />
-
-      {/* Shimmer overlay */}
-      <circle
-        cx="80" cy="80" r="63"
-        stroke="url(#goldShimmer)"
-        strokeWidth="13"
-        strokeDasharray="40 360"
-        strokeDashoffset="120"
-      />
-
-      {/* Inner edge */}
+      <circle cx="80" cy="80" r="63" stroke="url(#goldBandFlip)" strokeWidth="13" filter="url(#goldGlow)" />
+      <circle cx="80" cy="80" r="63" stroke="url(#goldShimmer)" strokeWidth="13" strokeDasharray="40 360" strokeDashoffset="120" />
       <circle cx="80" cy="80" r="56.5" stroke="#FFE066" strokeWidth="1" strokeOpacity="0.6" />
-
-      {/* Pavé channel — evenly spaced diamond dots */}
       {Array.from({ length: 20 }, (_, i) => {
-        const r = 63;
         const deg = (i / 20) * 360 - 90;
         const rad = (deg * Math.PI) / 180;
-        const x = 80 + r * Math.cos(rad);
-        const y = 80 + r * Math.sin(rad);
+        const x = 80 + 63 * Math.cos(rad);
+        const y = 80 + 63 * Math.sin(rad);
         return (
           <g key={i} transform={`translate(${x},${y})`}>
             <circle r="2.8" fill="#FFFFFF" opacity="0.85" />
             <circle r="1.4" fill="#E8F8FF" opacity="0.9" />
-            {/* tiny star gleam on every 4th */}
             {i % 4 === 0 && (
               <>
                 <path d="M0,-4 L0.5,-1 L0,1 L-0.5,-1 Z" fill="white" opacity="0.9" />
@@ -229,354 +147,290 @@ function WeddingBand({ size }: { size: number }) {
 }
 
 /* ─────────────────────────────────────────────────────────
-   Sparkle particles (generated once on client)
+   Interlocking Arc Overlay
 ───────────────────────────────────────────────────────── */
-type Spark = { x: number; y: number; delay: number; size: number; color: string };
-type Dust  = { x: number; y: number; delay: number; dur: number };
+function InterlockArc({ size }: { size: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="arcGold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stopColor="#FFF5CC" />
+          <stop offset="30%"  stopColor="#FFD700" />
+          <stop offset="60%"  stopColor="#D4AF37" />
+          <stop offset="100%" stopColor="#FFF0A0" />
+        </linearGradient>
+        <filter id="arcGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <path
+        d="M143 80 A63 63 0 0 0 80 17"
+        stroke="url(#arcGold)"
+        strokeWidth="13"
+        strokeLinecap="round"
+        filter="url(#arcGlow)"
+      />
+      <path
+        d="M143 80 A63 63 0 0 0 80 17"
+        stroke="#FFFFFF"
+        strokeWidth="13"
+        strokeLinecap="round"
+        strokeDasharray="30 200"
+        strokeDashoffset="-10"
+        opacity="0.4"
+      />
+      {[0, 22, 45, 68, 90].map((pct, i) => {
+        const t = pct / 100;
+        const angle = (0 + t * (-90 - 0)) * (Math.PI / 180);
+        const x = 80 + 63 * Math.cos(angle);
+        const y = 80 + 63 * Math.sin(angle);
+        return <circle key={i} cx={x} cy={y} r="2.2" fill="#FFFFFF" opacity="0.85" />;
+      })}
+    </svg>
+  );
+}
 
-/* ─────────────────────────────────────────────────────────
-   Main Component
-───────────────────────────────────────────────────────── */
 export function GlobalCinematicRings() {
-  const { scrollYProgress } = useScroll();
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const ringLeftRef = useRef<HTMLDivElement>(null);
+  const ringRightRef = useRef<HTMLDivElement>(null);
+  const interlockArcRef = useRef<HTMLDivElement>(null);
+  
+  const bloomContainerRef = useRef<HTMLDivElement>(null);
+  const glowCoreRef = useRef<HTMLDivElement>(null);
+  const glowRaysRef = useRef<HTMLDivElement>(null);
+  const lensFlareRef = useRef<HTMLDivElement>(null);
+  
+  const particlesRef = useRef<HTMLDivElement>(null);
+  const dustRef = useRef<HTMLDivElement>(null);
 
-  /* Smooth spring so rings glide, not jump */
-  const smooth = useSpring(scrollYProgress, {
-    damping: 38,
-    stiffness: 55,
-    restDelta: 0.001,
-  });
+  const [ringSize, setRingSize] = useState(210);
 
-  /* ── POSITIONS ──────────────────────────────────────────
-     At scroll = 0   → rings sit at top-left / top-right
-                        corners of the viewport
-     At scroll = 0.82 → rings meet at screen center
-  ───────────────────────────────────────────────────────── */
-  const xLeft  = useTransform(smooth, [0, 0.82, 1], ["-47vw", "-20px", "-20px"]);
-  const yLeft  = useTransform(smooth, [0, 0.82, 1], ["-46vh",   "0px",   "0px"]);
-  const rotLeft = useTransform(smooth, [0, 0.82, 1],  [-65,       -8,      -8]);
+  useEffect(() => {
+    const updateSize = () => {
+      setRingSize(window.innerWidth < 768 ? 140 : 210);
+    };
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
 
-  const xRight  = useTransform(smooth, [0, 0.82, 1], ["47vw",  "20px",  "20px"]);
-  const yRight  = useTransform(smooth, [0, 0.82, 1], ["-46vh",  "0px",   "0px"]);
-  const rotRight = useTransform(smooth, [0, 0.82, 1],  [65,       12,      12]);
-
-  /* ── GLOW & BLOOM (fires when rings meet) ─────────────── */
-  const glowOpacity  = useTransform(smooth, [0.79, 0.84], [0, 1]);
-  const glowScale    = useTransform(smooth, [0.79, 0.88], [0.3, 1.4]);
-  const raysOpacity  = useTransform(smooth, [0.81, 0.86], [0, 0.9]);
-  const raysRotate   = useTransform(smooth, [0.83, 1.0],  [0, 55]);
-  const sparkOpacity = useTransform(smooth, [0.81, 0.86], [0, 1]);
-
-  /* ── INTERLOCK ARC (left ring front portion) ─────────── */
-  const arcOpacity   = useTransform(smooth, [0.80, 0.85], [0, 1]);
-
-  /* ── FADE OUT near footer ─────────────────────────────── */
-  const masterOpacity = useTransform(smooth, [0.96, 0.99], [1, 0]);
-
-  /* Client-side particles */
-  const [sparks, setSparks] = useState<Spark[]>([]);
-  const [dust,   setDust]   = useState<Dust[]>([]);
+  // Set up particles
+  const [sparks, setSparks] = useState<{ x: number; y: number; delay: number; size: number; color: string }[]>([]);
+  const [dust, setDust] = useState<{ x: number; y: number; delay: number; dur: number }[]>([]);
 
   useEffect(() => {
     const colors = ["#D4AF37", "#FFD700", "#FFF8DC", "#FFE066", "#FFFFFF", "#FFC300"];
     setSparks(
-      Array.from({ length: 52 }, () => ({
-        x:     (Math.random() - 0.5) * 520,
-        y:     (Math.random() - 0.5) * 520,
-        delay: Math.random() * 4,
-        size:  Math.random() * 5.5 + 1.5,
+      Array.from({ length: 60 }, () => ({
+        x: (Math.random() - 0.5) * 600,
+        y: (Math.random() - 0.5) * 600,
+        delay: Math.random() * 2,
+        size: Math.random() * 6 + 1.5,
         color: colors[Math.floor(Math.random() * colors.length)],
       }))
     );
     setDust(
-      Array.from({ length: 35 }, () => ({
-        x:     (Math.random() - 0.5) * 640,
-        y:     (Math.random() - 0.5) * 640,
-        delay: Math.random() * 5,
-        dur:   Math.random() * 4 + 5,
+      Array.from({ length: 45 }, () => ({
+        x: (Math.random() - 0.5) * 700,
+        y: (Math.random() - 0.5) * 700,
+        delay: Math.random() * 3,
+        dur: Math.random() * 4 + 4,
       }))
     );
   }, []);
 
-  /* Ring pixel sizes */
-  const ringSize = typeof window !== "undefined" && window.innerWidth < 768 ? 130 : 210;
+  useGSAP(() => {
+    // Initial states
+    gsap.set(ringLeftRef.current, { x: "-48vw", rotation: -70, opacity: 0 });
+    gsap.set(ringRightRef.current, { x: "48vw", rotation: 70, opacity: 0 });
+    gsap.set(interlockArcRef.current, { x: "-48vw", rotation: -70, opacity: 0 });
+    
+    gsap.set([bloomContainerRef.current, glowCoreRef.current, glowRaysRef.current, lensFlareRef.current, particlesRef.current], { opacity: 0, scale: 0.5 });
+    
+    // Add continuous subtle floating animation to the rings (yoyo)
+    gsap.to(ringLeftRef.current, { y: -8, duration: 3, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    gsap.to(ringRightRef.current, { y: 8, duration: 4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    gsap.to(interlockArcRef.current, { y: -8, duration: 3, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+    // Scroll-driven animation spanning the entire page up to the together-forever section
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "body",
+        start: "top top",
+        end: () => {
+          const togetherSection = document.getElementById("together-forever");
+          if (togetherSection) {
+            return `+=${togetherSection.offsetTop - window.innerHeight / 2}`;
+          }
+          return "bottom center";
+        },
+        scrub: 1.5, // Smooth scrubbing
+      }
+    });
+
+    // Fade rings in immediately as user starts scrolling
+    tl.to([ringLeftRef.current, ringRightRef.current], { opacity: 1, duration: 0.1 }, 0);
+    
+    // Move rings inward and rotate
+    tl.to(ringLeftRef.current, { x: -20, rotation: -12, ease: "power1.inOut" }, 0);
+    tl.to(interlockArcRef.current, { x: -20, rotation: -12, ease: "power1.inOut" }, 0);
+    tl.to(ringRightRef.current, { x: 20, rotation: 12, ease: "power1.inOut" }, 0);
+
+    // Continuous rotation of the glow rays
+    gsap.to(glowRaysRef.current, { rotation: 360, duration: 60, repeat: -1, ease: "none" });
+    
+    // Animate dust particles continuously
+    if (dustRef.current) {
+      const dustMotes = gsap.utils.toArray(dustRef.current.children);
+      dustMotes.forEach((mote: any, i) => {
+        gsap.to(mote, {
+          y: -100 - Math.random() * 100,
+          opacity: 0,
+          duration: dust[i]?.dur || 5,
+          repeat: -1,
+          delay: dust[i]?.delay || 0,
+          ease: "none"
+        });
+      });
+    }
+
+    // Set up a ScrollTrigger specifically for the final interlock climax when hitting the together-forever section
+    ScrollTrigger.create({
+      trigger: "#together-forever",
+      start: "top center", 
+      end: "bottom bottom",
+      onEnter: () => {
+        // Climax animation! Rings interlock, bloom happens
+        gsap.to(interlockArcRef.current, { opacity: 1, duration: 0.5 });
+        gsap.to([bloomContainerRef.current, glowCoreRef.current, lensFlareRef.current], { 
+          opacity: 1, 
+          scale: 1, 
+          duration: 1.5, 
+          ease: "power2.out",
+          stagger: 0.2
+        });
+        gsap.to(glowRaysRef.current, { opacity: 0.8, scale: 1, duration: 1.5, ease: "power2.out" });
+        gsap.to(particlesRef.current, { opacity: 1, duration: 0.5 });
+        
+        // Trigger particle bursts
+        if (particlesRef.current) {
+          const sparkElements = gsap.utils.toArray(particlesRef.current.children);
+          sparkElements.forEach((spark: any, i) => {
+            gsap.fromTo(spark, 
+              { scale: 0, opacity: 1 }, 
+              { 
+                scale: 2, 
+                opacity: 0, 
+                duration: 1.5 + Math.random(), 
+                delay: sparks[i]?.delay || 0,
+                repeat: -1,
+                ease: "power1.out"
+              }
+            );
+          });
+        }
+      },
+      onLeaveBack: () => {
+        gsap.to(interlockArcRef.current, { opacity: 0, duration: 0.5 });
+        gsap.to([bloomContainerRef.current, glowCoreRef.current, glowRaysRef.current, lensFlareRef.current, particlesRef.current], { 
+          opacity: 0, 
+          scale: 0.5, 
+          duration: 1, 
+          ease: "power2.in"
+        });
+      }
+    });
+
+  }, { scope: containerRef });
 
   return (
-    <motion.div
-      className="fixed inset-0 z-20 pointer-events-none flex items-center justify-center overflow-hidden"
-      style={{ opacity: masterOpacity }}
-    >
-      {/* ══ BLOOM LAYERS ══════════════════════════════════ */}
-
-      {/* Outer warm bloom */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          width: "750px", height: "750px",
-          opacity: glowOpacity,
-          scale:   glowScale,
-          background:
-            "radial-gradient(circle, rgba(212,175,55,0.60) 0%, rgba(212,175,55,0.20) 35%, transparent 65%)",
-          filter: "blur(60px)",
-        }}
+    <div ref={containerRef} className="fixed inset-0 z-20 pointer-events-none flex items-center justify-center overflow-hidden">
+      
+      {/* Bloom & Glow Layers */}
+      <div ref={bloomContainerRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full w-[800px] h-[800px]"
+        style={{ background: "radial-gradient(circle, rgba(212,175,55,0.65) 0%, rgba(212,175,55,0.2) 35%, transparent 65%)", filter: "blur(60px)" }}
+      />
+      
+      <div ref={glowCoreRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full w-[350px] h-[350px]"
+        style={{ background: "radial-gradient(circle, rgba(255,248,180,0.95) 0%, rgba(212,175,55,0.55) 45%, transparent 75%)", filter: "blur(20px)" }}
       />
 
-      {/* Tight bright core */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+      {/* Lens Flare */}
+      <div ref={lensFlareRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[2px]"
         style={{
-          width: "300px", height: "300px",
-          opacity: glowOpacity,
-          scale:   glowScale,
-          background:
-            "radial-gradient(circle, rgba(255,248,180,0.95) 0%, rgba(212,175,55,0.50) 40%, transparent 70%)",
-          filter: "blur(18px)",
+          background: "linear-gradient(90deg, transparent 0%, rgba(255,230,50,0.6) 35%, rgba(255,255,200,1) 50%, rgba(255,230,50,0.6) 65%, transparent 100%)",
+          filter: "blur(2px)",
         }}
       />
-
-      {/* Horizontal lens flare streak */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-y-1/2"
+      <div ref={lensFlareRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[2px] h-[400px]"
         style={{
-          width: "600px", height: "2px",
-          marginLeft: "-300px",
-          opacity: glowOpacity,
-          background:
-            "linear-gradient(90deg, transparent 0%, rgba(255,230,50,0.55) 35%, rgba(255,255,200,0.95) 50%, rgba(255,230,50,0.55) 65%, transparent 100%)",
+          background: "linear-gradient(180deg, transparent 0%, rgba(255,230,50,0.4) 35%, rgba(255,255,200,0.8) 50%, rgba(255,230,50,0.4) 65%, transparent 100%)",
           filter: "blur(2px)",
         }}
       />
 
-      {/* Vertical flare */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2"
-        style={{
-          width: "2px", height: "400px",
-          marginTop: "-200px",
-          opacity: glowOpacity,
-          background:
-            "linear-gradient(180deg, transparent 0%, rgba(255,230,50,0.4) 35%, rgba(255,255,200,0.8) 50%, rgba(255,230,50,0.4) 65%, transparent 100%)",
-          filter: "blur(2px)",
-        }}
-      />
-
-      {/* ══ VOLUMETRIC LIGHT RAYS ═════════════════════════ */}
-      <motion.div
-        className="absolute top-1/2 left-1/2"
-        style={{ opacity: raysOpacity, rotate: raysRotate }}
-      >
+      {/* Volumetric Rays */}
+      <div ref={glowRaysRef} className="absolute top-1/2 left-1/2 w-0 h-0 flex items-center justify-center">
         {[0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180, 202.5, 225, 247.5, 270, 292.5, 315, 337.5].map((angle) => (
-          <div
-            key={angle}
-            className="absolute origin-left"
+          <div key={angle} className="absolute origin-left"
             style={{
               rotate: `${angle}deg`,
-              width:  angle % 90 === 0 ? "320px" : angle % 45 === 0 ? "220px" : "150px",
+              width: angle % 90 === 0 ? "350px" : angle % 45 === 0 ? "250px" : "180px",
               height: angle % 90 === 0 ? "2.5px" : "1.5px",
-              background:
-                "linear-gradient(to right, rgba(212,175,55,0.80), rgba(255,220,50,0.3), transparent)",
+              background: "linear-gradient(to right, rgba(212,175,55,0.85), rgba(255,220,50,0.35), transparent)",
               filter: "blur(1px)",
             }}
           />
         ))}
-      </motion.div>
+      </div>
 
-      {/* ══ SPARKLE PARTICLES ═════════════════════════════ */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 flex items-center justify-center"
-        style={{ opacity: sparkOpacity }}
-      >
+      {/* Sparkle Particles Burst */}
+      <div ref={particlesRef} className="absolute top-1/2 left-1/2 flex items-center justify-center">
         {sparks.map((s, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
+          <div key={i} className="absolute rounded-full"
             style={{
-              width:      s.size,
-              height:     s.size,
-              marginLeft: s.x,
-              marginTop:  s.y,
+              width: s.size, height: s.size,
+              marginLeft: s.x, marginTop: s.y,
               background: s.color,
-              boxShadow:  `0 0 ${s.size * 3}px ${s.color}`,
-            }}
-            animate={{ scale: [0, 2, 0], opacity: [0, 1, 0] }}
-            transition={{
-              duration:    2 + Math.random(),
-              delay:       s.delay,
-              repeat:      Infinity,
-              repeatDelay: Math.random() * 2,
-              ease:        "easeOut",
+              boxShadow: `0 0 ${s.size * 3}px ${s.color}`,
             }}
           />
         ))}
-      </motion.div>
+      </div>
 
-      {/* ══ 4-POINT GOLD STARS ════════════════════════════ */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 flex items-center justify-center"
-        style={{ opacity: sparkOpacity }}
-      >
-        {[
-          { x: -110, y: -90 }, { x: 120, y: -95 },
-          { x: -140, y:  55 }, { x: 130, y:  65 },
-          { x:    0, y: -155 },{ x:  -65, y: 135 },
-          { x:   75, y: 130 }, { x: -170, y: -10 },
-          { x:  175, y: -15 },
-        ].map((pos, i) => (
-          <motion.div
-            key={i}
-            className="absolute"
-            style={{ marginLeft: pos.x, marginTop: pos.y }}
-            animate={{ scale: [0, 1.2, 0], opacity: [0, 1, 0], rotate: [0, 45, 90] }}
-            transition={{
-              duration: 2,
-              delay: i * 0.28,
-              repeat: Infinity,
-              repeatDelay: 2.5,
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path
-                d="M9 0 L10.2 7.8 L18 9 L10.2 10.2 L9 18 L7.8 10.2 L0 9 L7.8 7.8 Z"
-                fill="#D4AF37" opacity="0.95"
-              />
-              <path
-                d="M9 0 L10.2 7.8 L18 9 L10.2 10.2 L9 18 L7.8 10.2 L0 9 L7.8 7.8 Z"
-                fill="#FFFFFF" opacity="0.45"
-              />
-            </svg>
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* ══ FLOATING GOLDEN DUST ══════════════════════════ */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 flex items-center justify-center"
-        style={{ opacity: glowOpacity }}
-      >
+      {/* Floating Golden Dust */}
+      <div ref={dustRef} className="absolute top-1/2 left-1/2 flex items-center justify-center opacity-60">
         {dust.map((d, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-[#D4AF37]"
+          <div key={i} className="absolute rounded-full bg-[#D4AF37]"
             style={{
-              width:      2.5,
-              height:     2.5,
-              marginLeft: d.x,
-              marginTop:  d.y,
-              filter:     "blur(0.4px)",
-            }}
-            animate={{ y: [0, -70], opacity: [0, 0.75, 0] }}
-            transition={{
-              duration:    d.dur,
-              repeat:      Infinity,
-              delay:       d.delay,
-              ease:        "easeInOut",
+              width: 2.5, height: 2.5,
+              marginLeft: d.x, marginTop: d.y,
+              filter: "blur(0.5px)",
             }}
           />
         ))}
-      </motion.div>
+      </div>
 
-      {/* ══ PULSING AMBIENT HALO ══════════════════════════ */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          width: "380px", height: "380px",
-          opacity: glowOpacity,
-          background:
-            "radial-gradient(circle, rgba(212,175,55,0.14) 0%, transparent 70%)",
-          filter: "blur(6px)",
-        }}
-        animate={{ scale: [1, 1.1, 1] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      />
+      {/* Left Ring (Engagement) */}
+      <div ref={ringLeftRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_0_25px_rgba(212,175,55,0.6)] z-20">
+        <EngagementRing size={ringSize} />
+      </div>
 
-      {/* ══ ENGAGEMENT RING (from top-left) ═══════════════ */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
-        style={{ x: xLeft, y: yLeft, rotate: rotLeft }}
-      >
-        <motion.div
-          animate={{ y: [0, -3, 0] }}
-          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-          className="drop-shadow-[0_0_24px_rgba(212,175,55,0.5)]"
-        >
-          <EngagementRing size={ringSize} />
-        </motion.div>
-      </motion.div>
+      {/* Right Ring (Wedding Band) */}
+      <div ref={ringRightRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_0_25px_rgba(212,175,55,0.6)] z-10">
+        <WeddingBand size={ringSize} />
+      </div>
 
-      {/* ══ WEDDING BAND (from top-right) ═════════════════ */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
-        style={{ x: xRight, y: yRight, rotate: rotRight }}
-      >
-        <motion.div
-          animate={{ y: [0, 3, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          className="drop-shadow-[0_0_24px_rgba(212,175,55,0.5)]"
-        >
-          <WeddingBand size={ringSize} />
-        </motion.div>
-      </motion.div>
-
-      {/* ══ INTERLOCK ARC — left ring front portion ═══════ */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30"
-        style={{ x: xLeft, y: yLeft, rotate: rotLeft, opacity: arcOpacity }}
-      >
-        <svg
-          width={ringSize}
-          height={ringSize}
-          viewBox="0 0 160 160"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <linearGradient id="arcGold" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%"   stopColor="#FFF5CC" />
-              <stop offset="30%"  stopColor="#FFD700" />
-              <stop offset="60%"  stopColor="#D4AF37" />
-              <stop offset="100%" stopColor="#FFF0A0" />
-            </linearGradient>
-            <filter id="arcGlow" x="-40%" y="-40%" width="180%" height="180%">
-              <feGaussianBlur stdDeviation="4" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-          {/* Right-top quarter arc that overlaps the wedding band */}
-          <path
-            d="M143 80 A63 63 0 0 0 80 17"
-            stroke="url(#arcGold)"
-            strokeWidth="13"
-            strokeLinecap="round"
-            filter="url(#arcGlow)"
-          />
-          {/* Shimmer on arc */}
-          <path
-            d="M143 80 A63 63 0 0 0 80 17"
-            stroke="#FFFFFF"
-            strokeWidth="13"
-            strokeLinecap="round"
-            strokeDasharray="30 200"
-            strokeDashoffset="-10"
-            opacity="0.4"
-          />
-          {/* Pavé dots on arc */}
-          {[0, 22, 45, 68, 90].map((pct, i) => {
-            const t = pct / 100;
-            const startAngle = 0; // 3 o'clock
-            const endAngle   = -90; // 12 o'clock
-            const angle = (startAngle + t * (endAngle - startAngle)) * (Math.PI / 180);
-            const r = 63;
-            const x = 80 + r * Math.cos(angle);
-            const y = 80 + r * Math.sin(angle);
-            return (
-              <circle key={i} cx={x} cy={y} r="2.2" fill="#FFFFFF" opacity="0.85" />
-            );
-          })}
-        </svg>
-      </motion.div>
-    </motion.div>
+      {/* Interlock Arc (Left ring front overlap) */}
+      <div ref={interlockArcRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+        <InterlockArc size={ringSize} />
+      </div>
+    </div>
   );
 }
