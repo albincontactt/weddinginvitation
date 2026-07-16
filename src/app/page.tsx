@@ -6,7 +6,6 @@ import { BrideGroomSection } from "@/components/sections/BrideGroomSection";
 import { WeddingDetailsSection } from "@/components/sections/WeddingDetailsSection";
 import { LocationsSection } from "@/components/sections/LocationsSection";
 import { BlessingsSection } from "@/components/sections/BlessingsSection";
-import { WeddingRingsSection } from "@/components/sections/WeddingRingsSection";
 import { TogetherForeverSection } from "@/components/sections/TogetherForeverSection";
 import { RSVPSection } from "@/components/sections/RSVPSection";
 import { Footer } from "@/components/sections/Footer";
@@ -39,7 +38,6 @@ export default function Home() {
       <WeddingDetailsSection />
       <LocationsSection />
       <BlessingsSection />
-      <WeddingRingsSection />
       <TogetherForeverSection />
       <RSVPSection />
       <Footer />
