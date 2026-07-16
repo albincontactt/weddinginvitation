@@ -1,250 +1,318 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 
-/* ─── Diamond sparkle types ─────────────────────────────── */
-interface Spark {
-  x: number;
-  y: number;
-  delay: number;
-  size: number;
-  color: string;
-  isDiamond: boolean;
-}
-
-/* ─── Single light ray ───────────────────────────────────── */
-function LightRay({ angle, opacity }: { angle: number; opacity: number }) {
-  return (
-    <div
-      className="absolute left-1/2 top-1/2 origin-left"
-      style={{
-        rotate:     `${angle}deg`,
-        width:      "180px",
-        height:     "1.5px",
-        marginTop:  "-0.75px",
-        marginLeft: 0,
-        background: `linear-gradient(to right, rgba(212,175,55,${opacity}), transparent)`,
-        filter:     "blur(0.5px)",
-      }}
-    />
-  );
-}
-
-/* ─── Component ─────────────────────────────────────────── */
 export function TogetherForeverSection() {
-  const ref = useRef<HTMLDivElement>(null);
+  const [sparks, setSparks] = useState<{ x: number; y: number; delay: number; size: number; color: string }[]>([]);
+  const [particles, setParticles] = useState<{ x: number; y: number; delay: number; duration: number }[]>([]);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "center center"],
-  });
-
-  const contentOpacity = useTransform(scrollYProgress, [0.45, 1], [0, 1]);
-  const contentY       = useTransform(scrollYProgress, [0.45, 1], [70, 0]);
-  const glowScale      = useTransform(scrollYProgress, [0.55, 1], [0.3, 1.3]);
-  const glowOpacity    = useTransform(scrollYProgress, [0.55, 1], [0, 1]);
-  const altarOpacity   = useTransform(scrollYProgress, [0.65, 1], [0, 0.8]);
-  const raysOpacity    = useTransform(scrollYProgress, [0.70, 1], [0, 1]);
-  const archScale      = useTransform(scrollYProgress, [0.2, 0.8], [0.92, 1]);
-  const archOpacity    = useTransform(scrollYProgress, [0.2, 0.7], [0, 1]);
-
-  // Color palette for sparkles
-  const SPARK_COLORS = ["#D4AF37", "#F5D060", "#FFF8DC", "#FFE066", "#FFFBEA", "#FFD700"];
-
-  const [sparks, setSparks] = useState<Spark[]>([]);
   useEffect(() => {
+    // Generate sparks for the center glow
+    const colors = ["#D4AF37", "#F5D060", "#FFF8DC", "#FFE066", "#FFFFFF"];
     setSparks(
-      Array.from({ length: 42 }, () => ({
-        x:         (Math.random() - 0.5) * 480,
-        y:         (Math.random() - 0.5) * 480,
-        delay:     Math.random() * 3.5,
-        size:      Math.random() * 5 + 1.5,
-        color:     SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)],
-        isDiamond: Math.random() > 0.6,
+      Array.from({ length: 40 }, () => ({
+        x: (Math.random() - 0.5) * 400,
+        y: (Math.random() - 0.5) * 400,
+        delay: Math.random() * 3,
+        size: Math.random() * 4 + 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      }))
+    );
+
+    // Floating golden dust particles
+    setParticles(
+      Array.from({ length: 60 }, () => ({
+        x: (Math.random() - 0.5) * 800,
+        y: (Math.random() - 0.5) * 800,
+        delay: Math.random() * 5,
+        duration: Math.random() * 4 + 4,
       }))
     );
   }, []);
 
-  const RAY_ANGLES = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
-
   return (
     <section
       id="together-forever"
-      ref={ref}
-      className="min-h-screen relative flex flex-col items-center justify-center overflow-hidden py-32"
+      className="min-h-[120vh] relative flex flex-col items-center justify-center overflow-hidden py-32 bg-transparent"
     >
+      {/* Hide the old global rings without touching page.tsx */}
+      <style>{`
+        main > div.fixed.inset-0.pointer-events-none.z-20 {
+          display: none !important;
+        }
+      `}</style>
 
-      {/* ── Altar light from below (warm radial glow) ─── */}
+      {/* ── Background Elements (Altar, Arch) ── */}
       <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 0.8 }}
+        viewport={{ once: true, margin: "-20%" }}
+        transition={{ duration: 3 }}
         className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"
         style={{
-          opacity: altarOpacity,
-          width:   "80vw",
-          height:  "55vh",
-          background:
-            "radial-gradient(ellipse at 50% 100%, rgba(212,175,55,0.22) 0%, rgba(212,175,55,0.07) 45%, transparent 70%)",
+          width: "80vw",
+          height: "55vh",
+          background: "radial-gradient(ellipse at 50% 100%, rgba(212,175,55,0.22) 0%, rgba(212,175,55,0.07) 45%, transparent 70%)",
           filter: "blur(30px)",
         }}
       />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none w-full flex justify-center opacity-70">
+        <div className="w-[92vw] md:w-[65vw] max-w-3xl h-[46vw] md:h-[32vw] max-h-[400px] rounded-t-full border-[1.5px] border-[#D4AF37]/20 shadow-[0_-12px_70px_rgba(212,175,55,0.08)_inset]" />
+      </div>
 
-      {/* ── Floral arch top border ───────────────────────── */}
-      <motion.div
-        style={{ scale: archScale, opacity: archOpacity }}
-        className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none w-full flex justify-center"
-      >
-        {/* Outer arch */}
-        <div
-          className="w-[92vw] md:w-[65vw] max-w-3xl h-[46vw] md:h-[32vw] max-h-[400px] rounded-t-full"
+      {/* Floating golden dust */}
+      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+        {particles.map((p, i) => (
+          <motion.div
+            key={`dust-${i}`}
+            className="absolute rounded-full bg-[#D4AF37]"
+            style={{
+              width: 2,
+              height: 2,
+              marginLeft: p.x,
+              marginTop: p.y,
+              filter: "blur(0.5px)",
+            }}
+            initial={{ opacity: 0, y: 0 }}
+            whileInView={{ opacity: [0, 0.6, 0], y: -50 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: p.duration,
+              repeat: Infinity,
+              delay: p.delay,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* ── 3D Rings Animation Sequence ── */}
+      <div className="relative w-full h-[500px] flex items-center justify-center pointer-events-none">
+        
+        {/* Golden Bloom & Lens Flares (Triggered at T=5s) */}
+        <motion.div
+          className="absolute w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full z-0"
+          initial={{ opacity: 0, scale: 0.5 }}
+          whileInView={{ opacity: [0, 1, 0.4], scale: [0.5, 1.2, 1] }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 4, delay: 5, ease: "easeOut" }}
           style={{
-            border:     "1.5px solid rgba(212,175,55,0.20)",
-            boxShadow:  "0 -12px 70px rgba(212,175,55,0.08) inset, 0 0 40px rgba(212,175,55,0.04)",
+            background: "radial-gradient(circle, rgba(212,175,55,0.8) 0%, rgba(212,175,55,0.2) 30%, transparent 70%)",
+            filter: "blur(40px)",
           }}
         />
-        {/* Inner arch echo */}
-        <div
-          className="absolute w-[80vw] md:w-[56vw] max-w-2xl h-[40vw] md:h-[28vw] max-h-[340px] rounded-t-full top-4"
-          style={{ border: "1px solid rgba(212,175,55,0.10)" }}
-        />
-      </motion.div>
 
-      {/* ── Floral corner accents ────────────────────────── */}
-      {[
-        { pos: "top-4 left-4",    o: "✿" },
-        { pos: "top-4 right-4",   o: "✿" },
-        { pos: "bottom-4 left-4", o: "❋" },
-        { pos: "bottom-4 right-4",o: "❋" },
-      ].map(({ pos, o }) => (
+        {/* Volumetric Light Rays (Triggered at T=5s) */}
         <motion.div
-          key={pos}
-          className={`absolute ${pos} text-[#D4AF37]/25 text-4xl select-none`}
-          animate={{ opacity: [0.2, 0.5, 0.2] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute flex items-center justify-center z-0"
+          initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
+          whileInView={{ opacity: [0, 0.8, 0.3], scale: [0.8, 1.2, 1], rotate: 20 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 6, delay: 5, ease: "easeOut" }}
         >
-          {o}
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
+            <div
+              key={`ray-${angle}`}
+              className="absolute origin-left"
+              style={{
+                rotate: `${angle}deg`,
+                width: "250px",
+                height: "2px",
+                background: "linear-gradient(to right, rgba(255,248,220,0.8), transparent)",
+                filter: "blur(1px)",
+              }}
+            />
+          ))}
         </motion.div>
-      ))}
 
-      {/* ── Central golden glow ──────────────────────────── */}
-      <motion.div
-        className="absolute w-[300px] h-[300px] md:w-[460px] md:h-[460px] rounded-full pointer-events-none"
-        style={{
-          scale:      glowScale,
-          opacity:    glowOpacity,
-          background:
-            "radial-gradient(circle, rgba(212,175,55,0.28) 0%, rgba(212,175,55,0.08) 50%, transparent 72%)",
-          filter: "blur(40px)",
-        }}
-      />
+        {/* Cinematic Star Sparkles (Triggered at T=5s) */}
+        <motion.div className="absolute flex items-center justify-center z-10">
+          {sparks.map((s, i) => (
+            <motion.div
+              key={`spark-${i}`}
+              className="absolute rounded-full"
+              style={{
+                width: s.size,
+                height: s.size,
+                marginLeft: s.x,
+                marginTop: s.y,
+                background: s.color,
+                boxShadow: `0 0 ${s.size * 3}px ${s.color}`,
+              }}
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: [0, 1, 0], scale: [0, 2, 0] }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{
+                duration: 2 + Math.random(),
+                delay: 5 + s.delay,
+                repeat: Infinity,
+                repeatDelay: Math.random() * 2,
+              }}
+            />
+          ))}
+        </motion.div>
 
-      {/* ── Light rays emanating outward ─────────────────── */}
-      <motion.div style={{ opacity: raysOpacity }} className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        {RAY_ANGLES.map((angle) => (
-          <LightRay key={angle} angle={angle} opacity={0.35} />
-        ))}
-      </motion.div>
-
-      {/* ── Sparkle particles ────────────────────────────── */}
-      <motion.div
-        style={{ opacity: glowOpacity }}
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
-      >
-        {sparks.map((s, i) => (
+        {/* ── Engagement Ring (Left) ── */}
+        {/* T=0 to 5s: Move from top-left corner (-60vw, -50vh) to center (-15px). */}
+        {/* T=5s onwards: Gentle floating. */}
+        <motion.div
+          className="absolute z-20 flex items-center justify-center"
+          initial={{ x: "-60vw", y: "-50vh", rotate: -80, scale: 1.2 }}
+          whileInView={{
+            x: ["-60vw", "-18px", "-18px"],
+            y: ["-50vh", "0px", "-5px"],
+            rotate: [-80, -10, -10],
+            scale: [1.2, 1, 1]
+          }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{
+            times: [0, 0.9, 1],
+            duration: 5.5,
+            ease: [0.25, 0.1, 0.25, 1], // cinematic smooth ease
+          }}
+          onAnimationComplete={(definition) => {
+            // After initial entrance, start infinite floating
+          }}
+        >
           <motion.div
-            key={i}
-            className="absolute flex items-center justify-center"
-            style={{
-              width:      s.size,
-              height:     s.size,
-              marginLeft: s.x,
-              marginTop:  s.y,
-            }}
-            animate={{ opacity: [0, 1, 0], scale: [0, 1.5, 0], y: [0, -50] }}
-            transition={{
-              duration:   2.5 + Math.random() * 1.5,
-              repeat:     Infinity,
-              delay:      s.delay,
-              ease:       "easeOut",
-            }}
+            animate={{ y: [-5, 5, -5] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 5.5 }}
           >
-            {s.isDiamond ? (
-              <span style={{ color: s.color, fontSize: s.size + 4, lineHeight: 1 }}>✦</span>
-            ) : (
-              <div
-                className="rounded-full"
-                style={{ width: "100%", height: "100%", background: s.color }}
-              />
-            )}
+            <Image
+              src="/engagement_ring.png"
+              alt="Platinum Engagement Ring"
+              width={280}
+              height={280}
+              className="w-[180px] h-[180px] md:w-[280px] md:h-[280px]"
+              style={{ mixBlendMode: "screen", filter: "drop-shadow(0px 10px 30px rgba(0,0,0,0.8))" }}
+              priority
+            />
           </motion.div>
-        ))}
-      </motion.div>
+        </motion.div>
 
-      {/* ── Placeholder space for global rings ───────────── */}
-      <div className="h-44 md:h-52 w-full" aria-hidden />
+        {/* ── Wedding Band (Right) ── */}
+        {/* T=0 to 5s: Move from top-right corner (60vw, -50vh) to center (15px). */}
+        <motion.div
+          className="absolute z-10 flex items-center justify-center"
+          initial={{ x: "60vw", y: "-50vh", rotate: 80, scale: 1.2 }}
+          whileInView={{
+            x: ["60vw", "18px", "18px"],
+            y: ["-50vh", "0px", "-5px"],
+            rotate: [80, 15, 15],
+            scale: [1.2, 1, 1]
+          }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{
+            times: [0, 0.9, 1],
+            duration: 5.5,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+        >
+          <motion.div
+            animate={{ y: [-5, 5, -5] }}
+            transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 5.5 }}
+          >
+            <Image
+              src="/wedding_band.png"
+              alt="Platinum Wedding Band"
+              width={260}
+              height={260}
+              className="w-[160px] h-[160px] md:w-[260px] md:h-[260px]"
+              style={{ mixBlendMode: "screen", filter: "drop-shadow(0px 10px 30px rgba(0,0,0,0.8))" }}
+              priority
+            />
+          </motion.div>
+        </motion.div>
+      </div>
 
-      {/* ── Text content ─────────────────────────────────── */}
-      <motion.div
-        style={{ opacity: contentOpacity, y: contentY }}
-        className="relative z-10 flex flex-col items-center text-center px-6 mt-8"
-      >
-        {/* Title */}
-        <h2 className="font-cormorant text-5xl md:text-7xl lg:text-8xl font-bold mb-4 gold-shimmer drop-shadow-[0_0_40px_rgba(212,175,55,0.5)]">
+      {/* ── Text Content (Reveals After T=7.5s) ── */}
+      <div className="relative z-30 flex flex-col items-center text-center px-6 mt-4 pointer-events-none">
+        
+        {/* Title: Together Forever */}
+        <motion.h2
+          className="font-cormorant text-5xl md:text-7xl lg:text-8xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-[#FFF8DC] via-[#D4AF37] to-[#A67C00] drop-shadow-[0_0_25px_rgba(212,175,55,0.6)]"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 1.5, delay: 7.5, ease: "easeOut" }}
+        >
           Together Forever
-        </h2>
+        </motion.h2>
 
-        {/* Ornamental divider */}
-        <div className="flex items-center gap-4 my-6">
-          <div className="h-[1px] w-20 md:w-36 bg-gradient-to-r from-transparent to-[#D4AF37]/60" />
+        <div className="flex items-center gap-4 my-4">
+          <motion.div
+            className="h-[1.5px] w-16 md:w-32 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"
+            initial={{ opacity: 0, scaleX: 0 }}
+            whileInView={{ opacity: 0.6, scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 8.5 }}
+          />
           <motion.span
             className="text-[#D4AF37] text-xl"
-            animate={{ scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            initial={{ opacity: 0, scale: 0 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 8.5 }}
           >
             ✦
           </motion.span>
-          <div className="h-[1px] w-20 md:w-36 bg-gradient-to-l from-transparent to-[#D4AF37]/60" />
+          <motion.div
+            className="h-[1.5px] w-16 md:w-32 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"
+            initial={{ opacity: 0, scaleX: 0 }}
+            whileInView={{ opacity: 0.6, scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 8.5 }}
+          />
         </div>
 
-        {/* Names */}
-        <p className="font-cormorant text-4xl md:text-6xl font-bold text-[#F5F0E8] mb-8 tracking-widest">
-          Joji{" "}
+        {/* Names: Joji ❤️ Vandana */}
+        <div className="flex items-center justify-center font-cormorant text-4xl md:text-6xl font-bold text-[#F5F0E8] mb-8 tracking-widest overflow-hidden py-2 relative">
+          
+          {/* Golden sweep effect */}
+          <motion.div
+            className="absolute inset-0 z-10 pointer-events-none"
+            initial={{ x: "-100%" }}
+            whileInView={{ x: "100%" }}
+            viewport={{ once: true }}
+            transition={{ duration: 2, delay: 9.5, ease: "easeInOut" }}
+            style={{
+              background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent)",
+              transform: "skewX(-20deg)",
+            }}
+          />
+
           <motion.span
-            animate={{ scale: [1, 1.25, 1] }}
-            transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-            className="inline-block text-red-400 mx-2"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 1.2, delay: 8.5, ease: "easeOut" }}
+          >
+            Joji
+          </motion.span>
+
+          <motion.span
+            initial={{ opacity: 0, scale: 0 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.8, delay: 9.2, type: "spring", bounce: 0.5 }}
+            className="inline-block text-red-500 mx-4 drop-shadow-[0_0_15px_rgba(239,68,68,0.6)]"
           >
             ❤️
-          </motion.span>{" "}
-          Vandana
-        </p>
+          </motion.span>
 
-        {/* Quote */}
-        <motion.p
-          className="font-cormorant text-xl md:text-3xl text-[#F5F0E8]/80 italic leading-relaxed max-w-2xl font-light"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 1.2 }}
-        >
-          &ldquo;Two hearts...
-          <br />
-          One soul...
-          <br />
-          One beautiful journey begins forever.&rdquo;
-        </motion.p>
+          <motion.span
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 1.2, delay: 8.5, ease: "easeOut" }}
+          >
+            Vandana
+          </motion.span>
+        </div>
 
-        {/* Bottom ornament row */}
-        <motion.div
-          className="mt-12 flex gap-4 text-[#D4AF37]/50 text-lg"
-          animate={{ opacity: [0.4, 0.9, 0.4] }}
-          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <span>✦</span>
-          <span>❖</span>
-          <span>✿</span>
-          <span>❖</span>
-          <span>✦</span>
-        </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }
