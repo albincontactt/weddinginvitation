@@ -128,13 +128,13 @@ export function GlobalCinematicRings() {
   });
 
   /* ── 1. RINGS MOVEMENT (0.0 -> 0.85) ── */
-  const xLeft  = useTransform(smooth, [0, 0.85], ["-45vw", "-18px"]);
-  const yLeft  = useTransform(smooth, [0, 0.85], ["-40vh",  "-5px"]);
-  const rotLeft = useTransform(smooth, [0, 0.85], [-80, -10]);
+  const xLeft  = useTransform(smooth, [0, 0.85, 1.0], ["-45vw", "-18px", "-18px"]);
+  const yLeft  = useTransform(smooth, [0, 0.85, 1.0], ["-40vh",  "0px",   "0px"]);
+  const rotLeft = useTransform(smooth, [0, 0.85, 1.0], [-80, -10, -10]);
 
-  const xRight  = useTransform(smooth, [0, 0.85], ["45vw",  "18px"]);
-  const yRight  = useTransform(smooth, [0, 0.85], ["-40vh", "-5px"]);
-  const rotRight = useTransform(smooth, [0, 0.85], [80, 15]);
+  const xRight  = useTransform(smooth, [0, 0.85, 1.0], ["45vw",  "18px", "18px"]);
+  const yRight  = useTransform(smooth, [0, 0.85, 1.0], ["-40vh", "0px",  "0px"]);
+  const rotRight = useTransform(smooth, [0, 0.85, 1.0], [80, 15, 15]);
 
   /* ── 2. GLOW & BLOOM (appears at interlock) ── */
   const glowOpacity = useTransform(smooth, [0.82, 0.87], [0, 1]);
