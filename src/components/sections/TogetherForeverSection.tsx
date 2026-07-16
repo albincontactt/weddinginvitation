@@ -134,17 +134,15 @@ export function TogetherForeverSection() {
   });
 
   /* ── 1. RINGS MOVEMENT (0.0 -> 0.85) ── */
-  // Rings start at the Hero section text area (Together with our Families)
-  // X: flanking the text (-15vw / 15vw)
-  // Y: high up the viewport (-25vh)
-  // Then they curve outward and travel down to the center.
-  const xLeft = useTransform(smooth, [0, 0.4, 0.85], ["-12vw", "-35vw", "-18px"]);
-  const yLeft = useTransform(smooth, [0, 0.4, 0.85], ["-28vh", "-10vh", "-5px"]);
-  const rotLeft = useTransform(smooth, [0, 0.85], [-120, -10]);
+  // Rings start at the top-left and top-right corners of the screen.
+  // As the user scrolls down, they travel downward and inward toward the center.
+  const xLeft = useTransform(smooth, [0, 0.85], ["-45vw", "-18px"]);
+  const yLeft = useTransform(smooth, [0, 0.85], ["-40vh", "-5px"]);
+  const rotLeft = useTransform(smooth, [0, 0.85], [-80, -10]);
 
-  const xRight = useTransform(smooth, [0, 0.4, 0.85], ["12vw", "35vw", "18px"]);
-  const yRight = useTransform(smooth, [0, 0.4, 0.85], ["-28vh", "-10vh", "-5px"]);
-  const rotRight = useTransform(smooth, [0, 0.85], [120, 15]);
+  const xRight = useTransform(smooth, [0, 0.85], ["45vw", "18px"]);
+  const yRight = useTransform(smooth, [0, 0.85], ["-40vh", "-5px"]);
+  const rotRight = useTransform(smooth, [0, 0.85], [80, 15]);
 
   /* ── 2. GLOW & BLOOM (0.85 -> 0.88) ── */
   const glowOpacity = useTransform(smooth, [0.84, 0.86], [0, 1]);
