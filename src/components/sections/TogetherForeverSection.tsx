@@ -48,7 +48,7 @@ export function TogetherForeverSection() {
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 0.8 }}
-        viewport={{ once: true, margin: "-20%" }}
+        viewport={{ once: true, margin: "-10%" }}
         transition={{ duration: 3 }}
         className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"
         style={{
@@ -77,7 +77,7 @@ export function TogetherForeverSection() {
             }}
             initial={{ opacity: 0, y: 0 }}
             whileInView={{ opacity: [0, 0.6, 0], y: -50 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{
               duration: p.duration,
               repeat: Infinity,
@@ -93,10 +93,10 @@ export function TogetherForeverSection() {
         
         {/* Golden Bloom & Lens Flares (Triggered at T=5s) */}
         <motion.div
-          className="absolute w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full z-0"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full z-0"
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: [0, 1, 0.4], scale: [0.5, 1.2, 1] }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 4, delay: 5, ease: "easeOut" }}
           style={{
             background: "radial-gradient(circle, rgba(212,175,55,0.8) 0%, rgba(212,175,55,0.2) 30%, transparent 70%)",
@@ -106,10 +106,10 @@ export function TogetherForeverSection() {
 
         {/* Volumetric Light Rays (Triggered at T=5s) */}
         <motion.div
-          className="absolute flex items-center justify-center z-0"
+          className="absolute top-1/2 left-1/2 flex items-center justify-center z-0"
           initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
           whileInView={{ opacity: [0, 0.8, 0.3], scale: [0.8, 1.2, 1], rotate: 20 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 6, delay: 5, ease: "easeOut" }}
         >
           {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
@@ -128,7 +128,7 @@ export function TogetherForeverSection() {
         </motion.div>
 
         {/* Cinematic Star Sparkles (Triggered at T=5s) */}
-        <motion.div className="absolute flex items-center justify-center z-10">
+        <motion.div className="absolute top-1/2 left-1/2 flex items-center justify-center z-10">
           {sparks.map((s, i) => (
             <motion.div
               key={`spark-${i}`}
@@ -143,7 +143,7 @@ export function TogetherForeverSection() {
               }}
               initial={{ opacity: 0, scale: 0 }}
               whileInView={{ opacity: [0, 1, 0], scale: [0, 2, 0] }}
-              viewport={{ once: true, amount: 0.5 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{
                 duration: 2 + Math.random(),
                 delay: 5 + s.delay,
@@ -155,25 +155,20 @@ export function TogetherForeverSection() {
         </motion.div>
 
         {/* ── Engagement Ring (Left) ── */}
-        {/* T=0 to 5s: Move from top-left corner (-60vw, -50vh) to center (-15px). */}
-        {/* T=5s onwards: Gentle floating. */}
         <motion.div
-          className="absolute z-20 flex items-center justify-center"
-          initial={{ x: "-60vw", y: "-50vh", rotate: -80, scale: 1.2 }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center"
+          initial={{ x: "-50vw", y: "-40vh", rotate: -80, scale: 1.2 }}
           whileInView={{
-            x: ["-60vw", "-18px", "-18px"],
-            y: ["-50vh", "0px", "-5px"],
+            x: ["-50vw", "-18px", "-18px"],
+            y: ["-40vh", "0px", "-5px"],
             rotate: [-80, -10, -10],
             scale: [1.2, 1, 1]
           }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{
             times: [0, 0.9, 1],
             duration: 5.5,
-            ease: [0.25, 0.1, 0.25, 1], // cinematic smooth ease
-          }}
-          onAnimationComplete={(definition) => {
-            // After initial entrance, start infinite floating
+            ease: [0.25, 0.1, 0.25, 1],
           }}
         >
           <motion.div
@@ -186,24 +181,23 @@ export function TogetherForeverSection() {
               width={280}
               height={280}
               className="w-[180px] h-[180px] md:w-[280px] md:h-[280px]"
-              style={{ mixBlendMode: "screen", filter: "drop-shadow(0px 10px 30px rgba(0,0,0,0.8))" }}
+              style={{ mixBlendMode: "screen" }}
               priority
             />
           </motion.div>
         </motion.div>
 
         {/* ── Wedding Band (Right) ── */}
-        {/* T=0 to 5s: Move from top-right corner (60vw, -50vh) to center (15px). */}
         <motion.div
-          className="absolute z-10 flex items-center justify-center"
-          initial={{ x: "60vw", y: "-50vh", rotate: 80, scale: 1.2 }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center"
+          initial={{ x: "50vw", y: "-40vh", rotate: 80, scale: 1.2 }}
           whileInView={{
-            x: ["60vw", "18px", "18px"],
-            y: ["-50vh", "0px", "-5px"],
+            x: ["50vw", "18px", "18px"],
+            y: ["-40vh", "0px", "-5px"],
             rotate: [80, 15, 15],
             scale: [1.2, 1, 1]
           }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{
             times: [0, 0.9, 1],
             duration: 5.5,
@@ -220,7 +214,7 @@ export function TogetherForeverSection() {
               width={260}
               height={260}
               className="w-[160px] h-[160px] md:w-[260px] md:h-[260px]"
-              style={{ mixBlendMode: "screen", filter: "drop-shadow(0px 10px 30px rgba(0,0,0,0.8))" }}
+              style={{ mixBlendMode: "screen" }}
               priority
             />
           </motion.div>
@@ -235,7 +229,7 @@ export function TogetherForeverSection() {
           className="font-cormorant text-5xl md:text-7xl lg:text-8xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-[#FFF8DC] via-[#D4AF37] to-[#A67C00] drop-shadow-[0_0_25px_rgba(212,175,55,0.6)]"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 1.5, delay: 7.5, ease: "easeOut" }}
         >
           Together Forever
@@ -246,14 +240,14 @@ export function TogetherForeverSection() {
             className="h-[1.5px] w-16 md:w-32 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"
             initial={{ opacity: 0, scaleX: 0 }}
             whileInView={{ opacity: 0.6, scaleX: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 1, delay: 8.5 }}
           />
           <motion.span
             className="text-[#D4AF37] text-xl"
             initial={{ opacity: 0, scale: 0 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5, delay: 8.5 }}
           >
             ✦
@@ -262,7 +256,7 @@ export function TogetherForeverSection() {
             className="h-[1.5px] w-16 md:w-32 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"
             initial={{ opacity: 0, scaleX: 0 }}
             whileInView={{ opacity: 0.6, scaleX: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 1, delay: 8.5 }}
           />
         </div>
@@ -275,7 +269,7 @@ export function TogetherForeverSection() {
             className="absolute inset-0 z-10 pointer-events-none"
             initial={{ x: "-100%" }}
             whileInView={{ x: "100%" }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 2, delay: 9.5, ease: "easeInOut" }}
             style={{
               background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent)",
@@ -286,7 +280,7 @@ export function TogetherForeverSection() {
           <motion.span
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 1.2, delay: 8.5, ease: "easeOut" }}
           >
             Joji
@@ -295,7 +289,7 @@ export function TogetherForeverSection() {
           <motion.span
             initial={{ opacity: 0, scale: 0 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.8, delay: 9.2, type: "spring", bounce: 0.5 }}
             className="inline-block text-red-500 mx-4 drop-shadow-[0_0_15px_rgba(239,68,68,0.6)]"
           >
@@ -305,7 +299,7 @@ export function TogetherForeverSection() {
           <motion.span
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 1.2, delay: 8.5, ease: "easeOut" }}
           >
             Vandana
