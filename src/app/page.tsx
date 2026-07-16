@@ -6,7 +6,7 @@ import { BrideGroomSection } from "@/components/sections/BrideGroomSection";
 import { WeddingDetailsSection } from "@/components/sections/WeddingDetailsSection";
 import { LocationsSection } from "@/components/sections/LocationsSection";
 import { BlessingsSection } from "@/components/sections/BlessingsSection";
-import { TogetherForeverSection } from "@/components/sections/TogetherForeverSection";
+
 import { RSVPSection } from "@/components/sections/RSVPSection";
 import { Footer } from "@/components/sections/Footer";
 import { FloatingNav } from "@/components/ui/FloatingNav";
@@ -14,7 +14,6 @@ import { MusicPlayer } from "@/components/ui/MusicPlayer";
 import { CinematicBackground } from "@/components/ui/CinematicBackground";
 import { PageBorders } from "@/components/ui/PageBorders";
 import { FallingPetals } from "@/components/animations/FallingPetals";
-import { GlobalCinematicRings } from "@/components/animations/GlobalCinematicRings";
 
 export default function Home() {
   return (
@@ -22,7 +21,6 @@ export default function Home() {
       {/* Fixed layers */}
       <CinematicBackground />
       <PageBorders />
-      <GlobalCinematicRings />
       <FallingPetals />
 
       {/* UI overlays */}
@@ -38,7 +36,7 @@ export default function Home() {
       <WeddingDetailsSection />
       <LocationsSection />
       <BlessingsSection />
-      <TogetherForeverSection />
+
       <RSVPSection />
       <Footer />
     </main>
