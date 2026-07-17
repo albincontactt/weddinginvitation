@@ -214,7 +214,8 @@ export function GlobalCinematicRings() {
   const ringRightRef = useRef<HTMLDivElement>(null);
   const interlockArcRef = useRef<HTMLDivElement>(null);
   const tightGlowRef = useRef<HTMLDivElement>(null);
-  const sparkBurstRef = useRef<HTMLDivElement>(null);
+  const sparklesContainerRef = useRef<HTMLDivElement>(null);
+  const ringsWrapperRef = useRef<HTMLDivElement>(null);
 
   // Considerably smaller and more elegant ring sizes
   const [ringSize, setRingSize] = useState(150);
@@ -228,138 +229,214 @@ export function GlobalCinematicRings() {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
-  const [sparks, setSparks] = useState<{ x: number; y: number; delay: number; size: number; color: string }[]>([]);
-
-  useEffect(() => {
-    // Generate fewer, more delicate sparks exclusively for the overlap area
-    const colors = ["#FFFFFF", "#FFF8D6", "#FCE38A", "#D4AF37"];
-    setSparks(
-      Array.from({ length: 15 }, () => ({
-        x: (Math.random() - 0.5) * 80,
-        y: (Math.random() - 0.5) * 120, // Taller spread to cover the top and bottom intersections
-        delay: Math.random() * 1.5,
-        size: Math.random() * 3 + 1,
-        color: colors[Math.floor(Math.random() * colors.length)],
-      }))
-    );
-  }, []);
-
   useGSAP(() => {
     // Initial off-screen/faded states
-    gsap.set(ringLeftRef.current, { x: "-48vw", rotation: -60, opacity: 0 });
-    gsap.set(ringRightRef.current, { x: "48vw", rotation: 60, opacity: 0 });
-    gsap.set(interlockArcRef.current, { x: "-48vw", rotation: -60, opacity: 0 });
-    gsap.set([tightGlowRef.current, sparkBurstRef.current], { opacity: 0, scale: 0.5 });
+    gsap.set(ringLeftRef.current, { x: "-45vw", rotation: -30, opacity: 0 });
+    gsap.set(ringRightRef.current, { x: "45vw", rotation: 30, opacity: 0 });
+    gsap.set(interlockArcRef.current, { x: "-45vw", rotation: -30, opacity: 0 });
+    gsap.set(tightGlowRef.current, { opacity: 0, scale: 0 });
     
     // Subtle float
     gsap.to(ringLeftRef.current, { y: -6, duration: 3.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
     gsap.to(ringRightRef.current, { y: 6, duration: 4, repeat: -1, yoyo: true, ease: "sine.inOut" });
     gsap.to(interlockArcRef.current, { y: -6, duration: 3.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
 
-    // Scroll mapping
-    const tl = gsap.timeline({
+    // Timeline 1: Rings translate horizontally as page scrolls down
+    // From start of website until hitting climax/together-forever section
+    const scrollRingsTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: "body",
         start: "top top",
-        end: () => {
-          const togetherSection = document.getElementById("together-forever");
-          if (togetherSection) {
-            return `+=${togetherSection.offsetTop - window.innerHeight / 2}`;
-          }
-          return "bottom center";
-        },
-        scrub: 1.5,
+        endTrigger: "#together-forever",
+        end: "top center",
+        scrub: 1.0
       }
     });
 
-    tl.to([ringLeftRef.current, ringRightRef.current], { opacity: 1, duration: 0.1 }, 0);
-    // Move closer to center (smaller rings overlap beautifully at roughly x = +/- 14)
-    tl.to(ringLeftRef.current, { x: -14, rotation: -10, ease: "power1.inOut" }, 0);
-    tl.to(interlockArcRef.current, { x: -14, rotation: -10, ease: "power1.inOut" }, 0);
-    tl.to(ringRightRef.current, { x: 14, rotation: 10, ease: "power1.inOut" }, 0);
+    scrollRingsTimeline.to([ringLeftRef.current, ringRightRef.current], { opacity: 1, duration: 0.1 }, 0);
+    scrollRingsTimeline.to(ringLeftRef.current, { x: "-25px", rotation: -10, ease: "none" }, 0);
+    scrollRingsTimeline.to(interlockArcRef.current, { x: "-25px", rotation: -10, ease: "none" }, 0);
+    scrollRingsTimeline.to(ringRightRef.current, { x: "25px", rotation: 10, ease: "none" }, 0);
 
-    // Final interlock climax
-    ScrollTrigger.create({
-      trigger: "#together-forever",
-      start: "top center", 
-      end: "bottom bottom",
-      onEnter: () => {
-        // Show interlock
-        gsap.to(interlockArcRef.current, { opacity: 1, duration: 0.5 });
-        // Show very localized glow at the joint
-        gsap.to(tightGlowRef.current, { opacity: 1, scale: 1, duration: 1.2, ease: "power2.out" });
-        gsap.to(sparkBurstRef.current, { opacity: 1, duration: 0.5 });
+    let lastSparkleTime = 0;
+    function createClimaxSparkles() {
+      const now = Date.now();
+      if (now - lastSparkleTime < 60) return;
+      lastSparkleTime = now;
+
+      const container = sparklesContainerRef.current;
+      if (!container) return;
+
+      for (let i = 0; i < 2; i++) {
+        const p = document.createElement("div");
+        p.className = "climax-sparkle-particle";
         
-        if (sparkBurstRef.current) {
-          const sparkElements = gsap.utils.toArray(sparkBurstRef.current.children);
-          sparkElements.forEach((spark: any, i) => {
-            gsap.fromTo(spark, 
-              { scale: 0, opacity: 1 }, 
-              { scale: 1.5, opacity: 0, duration: 1 + Math.random(), delay: sparks[i]?.delay || 0, repeat: -1, ease: "power1.out" }
-            );
-          });
+        const startX = window.innerWidth / 2;
+        const startY = window.innerHeight / 2 - 30;
+
+        const size = Math.random() * 5 + 3;
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = Math.random() * 100 + 50;
+        
+        const distanceX = Math.cos(angle) * velocity;
+        const distanceY = Math.sin(angle) * velocity;
+
+        p.style.position = "absolute";
+        p.style.borderRadius = "50%";
+        p.style.backgroundColor = "#FFF4C2";
+        p.style.boxShadow = "0 0 8px #D4AF37";
+        p.style.pointerEvents = "none";
+        p.style.width = `${size}px`;
+        p.style.height = `${size}px`;
+        p.style.left = `${startX}px`;
+        p.style.top = `${startY}px`;
+        p.style.zIndex = "40";
+
+        container.appendChild(p);
+
+        gsap.to(p, {
+          x: distanceX,
+          y: distanceY,
+          opacity: 0,
+          scale: 0.1,
+          duration: Math.random() * 1.2 + 0.8,
+          ease: "power2.out",
+          onComplete: () => {
+            p.remove();
+          }
+        });
+      }
+    }
+
+    // Timeline 2: Pinned Climax Section
+    const climaxTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#together-forever",
+        start: "top top",
+        end: "+=180%",
+        pin: true,
+        scrub: 1.0,
+        onUpdate: (self) => {
+          if (self.progress > 0.15 && self.progress < 0.85) {
+            createClimaxSparkles();
+          }
         }
-      },
-      onLeaveBack: () => {
-        gsap.to(interlockArcRef.current, { opacity: 0, duration: 0.5 });
-        gsap.to([tightGlowRef.current, sparkBurstRef.current], { opacity: 0, scale: 0.5, duration: 0.8, ease: "power2.in" });
       }
     });
+
+    // 1. Interlock Rings
+    climaxTimeline.to(ringLeftRef.current, {
+      x: "-8px",
+      scale: 1.25,
+      duration: 0.3,
+      ease: "power2.out"
+    }, 0);
+    climaxTimeline.to(interlockArcRef.current, {
+      x: "-8px",
+      scale: 1.25,
+      opacity: 1,
+      duration: 0.3,
+      ease: "power2.out"
+    }, 0);
+    climaxTimeline.to(ringRightRef.current, {
+      x: "8px",
+      scale: 1.25,
+      duration: 0.3,
+      ease: "power2.out"
+    }, 0);
+
+    // 2. Rotate the interlocked rings in 3D
+    climaxTimeline.to(ringsWrapperRef.current, {
+      rotationY: 360,
+      rotation: 12,
+      duration: 1.2,
+      ease: "power1.inOut"
+    }, 0);
+
+    // 3. Trigger Lens Flare and golden glow
+    climaxTimeline.to(tightGlowRef.current, {
+      scale: 2.8,
+      opacity: 1,
+      duration: 0.4,
+      ease: "back.out(1.5)"
+    }, 0.1);
+
+    // 4. Fade in "Together Forever"
+    climaxTimeline.to("#climax-text-together", {
+      opacity: 1,
+      y: 0,
+      duration: 0.4,
+      onStart: () => {
+        document.getElementById("climax-text-together")?.classList.add("visible");
+      },
+      onReverseComplete: () => {
+        document.getElementById("climax-text-together")?.classList.remove("visible");
+      }
+    }, 0.3);
+
+    // 5. Fade out "Together Forever"
+    climaxTimeline.to("#climax-text-together", {
+      opacity: 0,
+      y: -30,
+      duration: 0.4,
+      onComplete: () => {
+        document.getElementById("climax-text-together")?.classList.remove("visible");
+      }
+    }, 0.7);
+
+    // 6. Fade in "Joji ❤️ Vandhana"
+    climaxTimeline.to("#climax-text-names", {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      onStart: () => {
+        document.getElementById("climax-text-names")?.classList.add("visible");
+      },
+      onReverseComplete: () => {
+        document.getElementById("climax-text-names")?.classList.remove("visible");
+      }
+    }, 0.9);
+
+    // 7. Gracefully fade out rings, lens flare, and text at the very end
+    climaxTimeline.to([containerRef.current, tightGlowRef.current, "#climax-text-names"], {
+      opacity: 0,
+      duration: 0.3,
+      ease: "power1.in"
+    }, 1.4);
 
   }, { scope: containerRef });
 
   return (
     <div ref={containerRef} className="fixed inset-0 z-20 pointer-events-none flex items-center justify-center overflow-hidden">
       
-      {/* Dramatic interlock glow where rings join */}
-      <div ref={tightGlowRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] flex items-center justify-center pointer-events-none z-25">
-        {/* Wide ambient golden halo */}
-        <div className="absolute w-[300px] h-[300px] rounded-full bg-[#D4AF37] opacity-15 blur-[80px]" style={{ animation: "glowPulse 3s ease-in-out infinite" }} />
-        {/* Medium warm gold glow */}
-        <div className="absolute w-[180px] h-[200px] rounded-full bg-[#FCE38A] opacity-35 blur-[50px]" style={{ animation: "glowPulse 2.5s ease-in-out infinite 0.5s" }} />
-        {/* Inner bright gold core */}
-        <div className="absolute w-[100px] h-[160px] rounded-full bg-[#FFF8D6] opacity-50 blur-[30px]" style={{ animation: "glowPulse 2s ease-in-out infinite 0.3s" }} />
-        {/* Hot white center */}
-        <div className="absolute w-[40px] h-[100px] rounded-full bg-[#FFFFFF] opacity-70 blur-[15px]" />
-        {/* Horizontal lens flare */}
-        <div className="absolute w-[500px] h-[2px] bg-gradient-to-r from-transparent via-[#FCE38A] to-transparent opacity-60 blur-[2px]" />
-        <div className="absolute w-[300px] h-[1px] bg-gradient-to-r from-transparent via-[#FFFFFF] to-transparent opacity-80 blur-[1px]" />
-        {/* Pulse keyframe */}
-        <style dangerouslySetInnerHTML={{ __html: `
-          @keyframes glowPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); filter: brightness(1.2); }
-          }
-        `}} />
-      </div>
+      {/* Cinematic Lens Flare Glow — jijo style radial gradient */}
+      <div ref={tightGlowRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-25" style={{
+        width: "320px",
+        height: "320px",
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(255, 240, 165, 0.35) 0%, rgba(212, 175, 55, 0.08) 45%, transparent 70%)",
+        mixBlendMode: "screen",
+      }} />
 
-      {/* Sparkles tightly packed around the joint */}
-      <div ref={sparkBurstRef} className="absolute top-1/2 left-1/2 flex items-center justify-center z-40">
-        {sparks.map((s, i) => (
-          <div key={i} className="absolute rounded-full"
-            style={{
-              width: s.size, height: s.size,
-              marginLeft: s.x, marginTop: s.y,
-              background: s.color,
-              boxShadow: `0 0 ${s.size * 2}px ${s.color}`,
-            }}
-          />
-        ))}
-      </div>
+      {/* Canvas/DOM sparkles rendering layer */}
+      <div ref={sparklesContainerRef} className="absolute inset-0 pointer-events-none z-40 overflow-hidden" />
 
-      {/* Left Ring (Engagement) */}
-      <div ref={ringLeftRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)] z-20">
-        <EngagementRing size={ringSize} />
-      </div>
+      {/* Rings wrapper to rotate 3D */}
+      <div ref={ringsWrapperRef} className="relative w-full h-full flex items-center justify-center" style={{ transformStyle: "preserve-3d", perspective: "1000px" }}>
+        {/* Left Ring (Engagement) */}
+        <div ref={ringLeftRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)] z-20" style={{ transformStyle: "preserve-3d" }}>
+          <EngagementRing size={ringSize} />
+        </div>
 
-      {/* Right Ring (Wedding Band) */}
-      <div ref={ringRightRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)] z-10">
-        <WeddingBand size={ringSize} />
-      </div>
+        {/* Right Ring (Wedding Band) */}
+        <div ref={ringRightRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)] z-10" style={{ transformStyle: "preserve-3d" }}>
+          <WeddingBand size={ringSize} />
+        </div>
 
-      {/* Interlock Arc (Left ring front overlap) */}
-      <div ref={interlockArcRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] z-30">
-        <InterlockArc size={ringSize} />
+        {/* Interlock Arc (Left ring front overlap) */}
+        <div ref={interlockArcRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] z-30" style={{ transformStyle: "preserve-3d" }}>
+          <InterlockArc size={ringSize} />
+        </div>
       </div>
     </div>
   );
