@@ -39,7 +39,7 @@ export function LocationsSection() {
                   <br /><br />
                   Time: 10:00 AM
                 </p>
-                <Button href="https://maps.app.goo.gl/snAuVQFCfFYmzasi7" variant="primary">
+                <Button href="https://maps.app.goo.gl/snAuVQFCfFYmzasi7" variant="gold">
                   <MapPin className="w-4 h-4" />
                   Navigate to Church
                 </Button>
@@ -70,7 +70,7 @@ export function LocationsSection() {
                   <br /><br />
                   Time: 12:00 PM onwards
                 </p>
-                <Button href="https://maps.app.goo.gl/iLHG1TYKqqN1tEiz6" variant="primary">
+                <Button href="https://maps.app.goo.gl/iLHG1TYKqqN1tEiz6" variant="gold">
                   <MapPin className="w-4 h-4" />
                   Navigate to Reception
                 </Button>

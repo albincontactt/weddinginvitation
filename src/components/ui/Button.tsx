@@ -5,7 +5,7 @@ import { HTMLMotionProps, motion } from "framer-motion";
 
 interface ButtonProps extends HTMLMotionProps<"button"> {
   children: ReactNode;
-  variant?: "primary" | "outline";
+  variant?: "primary" | "outline" | "gold";
   href?: string;
 }
 
@@ -14,7 +14,8 @@ export function Button({ children, variant = "primary", href, className = "", ..
   
   const variants = {
     primary: "bg-primary text-white shadow-lg hover:shadow-xl border-2 border-primary hover:bg-opacity-90",
-    outline: "bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-white"
+    outline: "bg-transparent text-primary border-2 border-primary hover:bg-primary hover:text-white",
+    gold: "bg-[#D4AF37] text-black font-bold shadow-md hover:bg-[#C59B27] hover:shadow-lg border-none"
   };
 
   const buttonContent = (
