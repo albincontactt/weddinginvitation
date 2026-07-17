@@ -311,11 +311,26 @@ export function GlobalCinematicRings() {
   return (
     <div ref={containerRef} className="fixed inset-0 z-20 pointer-events-none flex items-center justify-center overflow-hidden">
       
-      {/* Extremely localized, tight glow exactly where the rings overlap */}
-      <div ref={tightGlowRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] flex items-center justify-center pointer-events-none z-25">
-        {/* Glow behind the front arc but in front of the back ring */}
-        <div className="absolute w-[60px] h-[120px] bg-[#FFF8D6] opacity-30 rounded-full blur-[25px]" />
-        <div className="absolute w-[30px] h-[80px] bg-[#FFFFFF] opacity-50 rounded-full blur-[12px]" />
+      {/* Dramatic interlock glow where rings join */}
+      <div ref={tightGlowRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] flex items-center justify-center pointer-events-none z-25">
+        {/* Wide ambient golden halo */}
+        <div className="absolute w-[300px] h-[300px] rounded-full bg-[#D4AF37] opacity-15 blur-[80px]" style={{ animation: "glowPulse 3s ease-in-out infinite" }} />
+        {/* Medium warm gold glow */}
+        <div className="absolute w-[180px] h-[200px] rounded-full bg-[#FCE38A] opacity-35 blur-[50px]" style={{ animation: "glowPulse 2.5s ease-in-out infinite 0.5s" }} />
+        {/* Inner bright gold core */}
+        <div className="absolute w-[100px] h-[160px] rounded-full bg-[#FFF8D6] opacity-50 blur-[30px]" style={{ animation: "glowPulse 2s ease-in-out infinite 0.3s" }} />
+        {/* Hot white center */}
+        <div className="absolute w-[40px] h-[100px] rounded-full bg-[#FFFFFF] opacity-70 blur-[15px]" />
+        {/* Horizontal lens flare */}
+        <div className="absolute w-[500px] h-[2px] bg-gradient-to-r from-transparent via-[#FCE38A] to-transparent opacity-60 blur-[2px]" />
+        <div className="absolute w-[300px] h-[1px] bg-gradient-to-r from-transparent via-[#FFFFFF] to-transparent opacity-80 blur-[1px]" />
+        {/* Pulse keyframe */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes glowPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); filter: brightness(1.2); }
+          }
+        `}} />
       </div>
 
       {/* Sparkles tightly packed around the joint */}
