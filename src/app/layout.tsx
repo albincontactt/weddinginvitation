@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Cinzel, Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
+import { GlobalCinematicWeddingRings } from "@/components/animations/GlobalCinematicWeddingRings";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -40,6 +41,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-poppins bg-background text-darkText overflow-x-hidden transition-colors duration-500">
         <ThemeProvider>
+          <GlobalCinematicWeddingRings />
           <ScrollProgress />
           {children}
         </ThemeProvider>
